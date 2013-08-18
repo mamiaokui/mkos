@@ -2,12 +2,12 @@ ipl.o : ipl.nas
 	@echo nasm ipl.nas -o ipl.o
 	nasm ipl.nas -o ipl.o
 
-haribote.o: haribote.nas
-	@echo nasm haribote.nas -o haribote.o
-	nasm haribote.nas -o haribote.o
+asmhead.o: asmhead.nas
+	@echo nasm asmhead.nas -o asmhead.o
+	nasm asmhead.nas -o asmhead.o
 
-os.img: ipl.o haribote.o
-	cat ipl.o haribote.o > os.img
+os.img: ipl.o asmhead.o
+	cat ipl.o asmhead.o > os.img
 
 all: os.img
 	@echo ok
