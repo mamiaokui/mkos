@@ -155,7 +155,7 @@ LABEL_SEG_CODE32:
 ;    mov [gs:edi], ax
 
 	; 到此停止
-	jmp	$
+	jmp	BOTPAK+0x34
 
 SegCode32Len	equ	$ - LABEL_SEG_CODE32  ;表示从LABEL_SEG_CODE32:到此处的地址之距离
 ; END of [SECTION .s32]
