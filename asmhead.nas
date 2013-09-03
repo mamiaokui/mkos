@@ -10,9 +10,11 @@ SCRNX	EQU		0x0ff4
 SCRNY	EQU		0x0ff6		
 VRAM	EQU		0x0ff8
 
-BOTPAK	EQU		0x00280000	
-DSKCAC	EQU		0x00100000	
-DSKCAC0	EQU		0x00008200	
+
+IPLPOS	EQU		0x00100000	;for ipl
+ASMHEADPOS	EQU		0x00008200 ;for asmhead
+BOTPAK	EQU		0x00280000	;for bootpack
+
 
         
 
@@ -38,6 +40,16 @@ SelectorVideo		equ	LABEL_DESC_VIDEO	- LABEL_GDT    ;数据段选择子
 
 [SECTION .s16]
 [BITS	16]
+
+memcpy:
+		MOV		EAX,[ESI]
+		ADD		ESI,4
+		MOV		[EDI],EAX
+		ADD		EDI,4
+		SUB		ECX,1
+		JNZ		memcpy		
+		RET
+
 LABEL_BEGIN:
 		MOV		AL,0x13	
 		MOV		AH,0x00
@@ -57,6 +69,29 @@ LABEL_BEGIN:
 		OUT		0x21,AL
 		NOP					
 		OUT		0xa1,AL
+
+; for ipl
+
+		MOV		ESI,0x7c00	
+		MOV		EDI,IPLPOS	
+		MOV		ECX,512/4
+		CALL	memcpy
+
+
+; for asmhead
+		MOV		ESI,ASMHEADPOS
+		MOV		EDI,IPLPOS+512
+		MOV		ECX,bootpack-0x8200
+		CALL	memcpy
+
+; for bootpack
+
+		MOV		EBX, bootpack
+        MOV     ESI, EBX
+        MOV     EDI, BOTPAK
+        MOV     ECX, 1024*1024*5/4
+        CALL    memcpy
+
 
 	mov	ax, cs
 	mov	ds, ax
@@ -111,7 +146,7 @@ LABEL_SEG_CODE32:
 	mov	ax, SelectorVideo
 	mov	gs, ax			; 视频段选择子(目的)
 
-	mov	edi, 320*100	; 屏幕第 10 行, 第 0 列。
+	mov	edi, 320*100	; 屏幕第 101 行, 第 0 列。
     mov ax, 0x8888
    	mov	[gs:edi], ax
 
@@ -124,6 +159,5 @@ LABEL_SEG_CODE32:
 
 SegCode32Len	equ	$ - LABEL_SEG_CODE32  ;表示从LABEL_SEG_CODE32:到此处的地址之距离
 ; END of [SECTION .s32]
-resb 3000000
 
-
+bootpack:
