@@ -148,14 +148,14 @@ LABEL_SEG_CODE32:
 
 	mov	edi, 320*100	; 屏幕第 101 行, 第 0 列。
     mov ax, 0x8888
-   	mov	[gs:edi], ax
+;   	mov	[gs:edi], ax
 
     mov edi, 0
     mov ax, 8
 ;    mov [gs:edi], ax
 
 	; 到此停止
-	jmp	BOTPAK+0x34
+	jmp	BOTPAK+0x1000
 
 SegCode32Len	equ	$ - LABEL_SEG_CODE32  ;表示从LABEL_SEG_CODE32:到此处的地址之距离
 ; END of [SECTION .s32]

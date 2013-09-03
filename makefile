@@ -1,9 +1,7 @@
 ipl.o : ipl.nas
-	@echo nasm ipl.nas -o ipl.o
 	nasm ipl.nas -o ipl.o
 
 asmhead.o: asmhead.nas
-	@echo nasm asmhead.nas -o asmhead.o
 	nasm asmhead.nas -o asmhead.o
 
 resb.o: resb.nas
@@ -12,8 +10,14 @@ resb.o: resb.nas
 bootpack.o: bootpack.c
 	gcc -c bootpack.c -o bootpack.o
 
-os.img: ipl.o asmhead.o bootpack.o resb.o
-	cat ipl.o asmhead.o bootpack.o resb.o> os.img
+naskfunc.o: naskfunc.nas
+	nasm -f elf  naskfunc.nas -o naskfunc.o
+
+bootpacklink.o: naskfunc.o bootpack.o
+	ld -Ttext 0x290000  bootpack.o naskfunc.o -o bootpacklink.o
+
+os.img: ipl.o asmhead.o bootpack.o resb.o bootpacklink.o
+	cat ipl.o asmhead.o bootpacklink.o resb.o> os.img
 
 all: os.img
 	@echo ok
