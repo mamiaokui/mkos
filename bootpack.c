@@ -1,7 +1,7 @@
 extern void ioHlt(void);
 extern void writeMemory8(int address, int value);
 
-void hariman(void)
+void MKOSMain(void)
 {
     int i;
     int j;
