@@ -1,25 +1,25 @@
-ipl.o : ipl.nas
-	nasm ipl.nas -o ipl.o
+IPL.o : IPL.nas
+	nasm IPL.nas -o IPL.o
 
-asmhead.o: asmhead.nas
-	nasm asmhead.nas -o asmhead.o
+AsmHead.o: AsmHead.nas
+	nasm AsmHead.nas -o AsmHead.o
 
-resb.o: resb.nas
-	nasm resb.nas -o resb.o
+RESB.o: RESB.nas
+	nasm RESB.nas -o RESB.o
 
-bootpack.o: bootpack.c
-	gcc -c -m32 bootpack.c -o bootpack.o
+BootProgram.o: BootProgram.c
+	gcc -c BootProgram.c -o BootProgram.o
 
-naskfunc.o: naskfunc.nas
-	nasm -f elf  naskfunc.nas -o naskfunc.o
+AsmFunction.o: AsmFunction.nas
+	nasm -f elf  AsmFunction.nas -o AsmFunction.o
 
-bootpacklink.o: naskfunc.o bootpack.o
-	ld -m elf_i386 -Ttext 0x290000  bootpack.o naskfunc.o -o bootpacklink.o
+BootProgramLink.o: AsmFunction.o BootProgram.o
+	ld -m elf_i386 -Ttext 0x290000  BootProgram.o AsmFunction.o -o BootProgramLink.o
 
-os.img: ipl.o asmhead.o bootpack.o resb.o bootpacklink.o
-	cat ipl.o asmhead.o bootpacklink.o resb.o> os.img
+OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
+	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img
 
-all: os.img
+all: OS.img
 	@echo ok
 
 clean:
