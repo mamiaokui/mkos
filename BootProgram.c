@@ -1,5 +1,14 @@
-extern void ioHlt(void);
+extern void hlt(void);
 extern void writeMemory8(int address, int value);
+extern void cli(void);
+extern void out8(int port, int data);
+extern int loadEflags(void);
+extern void storeEflags(int eflags);
+
+
+void init_palette(void);
+void set_palette(int start, int end, unsigned char *rgb);
+
 
 void MKOSMain(void)
 {
@@ -11,5 +20,5 @@ void MKOSMain(void)
         }
     }
     while (1)
-        ioHlt();
+        hlt();
 }

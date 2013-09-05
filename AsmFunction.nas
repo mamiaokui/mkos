@@ -3,12 +3,12 @@
 
 [BITS 32]
 
-		GLOBAL	ioHlt	
+		GLOBAL	hlt	
         GLOBAL  writeMemory8
 
 
 [SECTION .text]
-ioHlt:	; void ioHlt(void);
+hlt:	; void hlt(void);
 
 		HLT
 		RET
