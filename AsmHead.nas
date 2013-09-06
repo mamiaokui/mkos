@@ -25,7 +25,7 @@ org	0x8200
 ; GDT
 ;                                         段基址,      段界限     , 属性
 LABEL_GDT:		Descriptor	       0,                0, 0     		; 空描述符
-LABEL_DESC_CODE32:	Descriptor	       0, SegCode32Len - 1, DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
+LABEL_DESC_CODE32:	Descriptor	       0, 0x10000000, DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
 LABEL_DESC_VIDEO:	Descriptor	 0xa0000,           320*200 -1, DA_DRW		; 显存首地址
 ; GDT 结束
 
@@ -97,7 +97,7 @@ LABEL_BEGIN:
 	mov	ds, ax
 	mov	es, ax
 	mov	ss, ax
-	mov	sp, 0100h
+	mov	sp, 0x110000
 
 	; 初始化 32 位代码段描述符
 	xor	eax, eax                                  ;目的是将eax置0，相当与mov eax 0指令，但是xor指令比mov指令快3个机器指令

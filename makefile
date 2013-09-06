@@ -8,7 +8,7 @@ RESB.o: RESB.nas
 	nasm RESB.nas -o RESB.o
 
 BootProgram.o: BootProgram.c
-	gcc -c BootProgram.c -o BootProgram.o
+	gcc -c -O0 -fno-stack-protector BootProgram.c -o BootProgram.o
 
 AsmFunction.o: AsmFunction.nas
 	nasm -f elf  AsmFunction.nas -o AsmFunction.o

@@ -2,43 +2,43 @@
 ; TAB=4
 [BITS 32]
 
-		GLOBAL	hlt	
-        GLOBAL  writeMemory8
-        GLOBAL  cli
-        GLOBAL  out8
-        GLOBAL  loadEflags
-        GLOBAL  storeEflags
+		GLOBAL	asmHlt	
+        GLOBAL  asmWriteMemory8
+        GLOBAL  asmCli
+        GLOBAL  asmOut8
+        GLOBAL  asmLoadEflags
+        GLOBAL  asmStoreEflags
 
 
 
 [SECTION .text]
-hlt:	; void hlt(void);
+asmHlt:	; void asmHlt(void);
 		HLT
 		RET
 
-writeMemory8: ;void writeMemory8(int, int);
+asmWriteMemory8: ;void asmWriteMemory8(int, int);
 
     mov ecx, [esp + 4]
     mov al,  [esp + 8]
     mov [ecx], al
     ret
 
-cli: ;void cli(void);
+asmCli: ;void asmCli(void);
 		CLI
 		RET
 
-out8: ;void out8(int port, int data);
-		MOV		EDX,[ESP+4]		; port
-		MOV		AL,[ESP+8]		; data
-		OUT		DX,AL
+asmOut8: ;void asmOut8(int port, int data);
+		mov		dx,[esp+4]		; port
+		mov		al,[esp+8]		; data
+		out		dx,al
 		RET
 
-loadEflags: ;int loadEflags(void);
+asmLoadEflags: ;int asmLoadEflags(void);
 		PUSHFD		; PUSH EFLAGS INTO STACK
 		POP		EAX
 		RET
 
-storeEflags: ;void storeEflags(int eflags);
+asmStoreEflags: ;void asmStoreEflags(int eflags);
 		MOV		EAX,[ESP+4]
 		PUSH	EAX
 		POPFD		; POP EAX TO EFLAGS
