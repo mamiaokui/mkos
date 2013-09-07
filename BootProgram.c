@@ -6,9 +6,9 @@ extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
 
 
+
 void initPalette(void);
 void setPalette(int start, int end, unsigned char *rgb);
-
 
 
 void MKOSMain(void)
@@ -29,7 +29,7 @@ void MKOSMain(void)
 
 void initPalette(void)
 {
-    unsigned char table_rgb[16 * 3] = {
+	unsigned char table_rgb[16 * 3] = {
 		0x00, 0x00, 0x00, // black
 		0xff, 0x00, 0x00, // bright red
 		0x00, 0xff, 0x00, // bright green
