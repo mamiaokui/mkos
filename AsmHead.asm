@@ -143,18 +143,6 @@ LABEL_BEGIN:
 
 ;以下才是真正的数据段，此处与数据段段描述符相呼应。
 LABEL_SEG_CODE32:
-	mov	ax, SelectorVideo
-	mov	gs, ax			; 视频段选择子(目的)
-
-	mov	edi, 320*100	; 屏幕第 101 行, 第 0 列。
-    mov ax, 0x8888
-;   	mov	[gs:edi], ax
-
-    mov edi, 0
-    mov ax, 8
-;    mov [gs:edi], ax
-
-	; 到此停止
 	jmp	BOTPAK+0x1000
 
 SegCode32Len	equ	$ - LABEL_SEG_CODE32  ;表示从LABEL_SEG_CODE32:到此处的地址之距离
