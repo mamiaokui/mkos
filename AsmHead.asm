@@ -97,7 +97,7 @@ LABEL_BEGIN:
 	mov	ds, ax
 	mov	es, ax
 	mov	ss, ax
-	mov	sp, 0x110000
+	mov	sp, 0x100
 
 	; 初始化 32 位代码段描述符
 	xor	eax, eax                                  ;目的是将eax置0，相当与mov eax 0指令，但是xor指令比mov指令快3个机器指令

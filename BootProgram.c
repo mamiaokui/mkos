@@ -4,11 +4,50 @@ extern void asmCli(void);
 extern void asmOut8(int port, int data);
 extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
+/*
+#define BLACK 0
+#define BLACKRED 1
+#define BRIGHTGREEN 2
+#define BRIGHTYELLOW 3
+#define BRIGHTBLUE 4
+#define BRIGHTPURPLE 5
+#define LIGHTBLUE 6
+#define WHITE 7
+#define BRIGHTGRAY 8
+#define DARKRED 9
+#define DARKGREEN 10
+#define DARKYELLOW 11
+#define DARKBLUE 12
+#define DARKPURPLE 13 
+#define LIGHTDARKBLUE 14
+#define DARKGRAY 15
+*/
+
+#define COL000000		0
+#define COLFF0000		1
+#define COL00FF00		2
+#define COLFFFF00		3
+#define COL0000FF		4
+#define COLFF00FF		5
+#define COL00FFFF		6
+#define COLFFFFFF		7
+#define COLC6C6C6		8
+#define COL840000		9
+#define COL008400		10
+#define COL848400		11
+#define COL000084		12
+#define COL840084		13
+#define COL008484		14
+#define COL848484		15
+
+#define SCREENWIDTH    320
+
 
 
 
 void initPalette(void);
 void setPalette(int start, int end, unsigned char *rgb);
+void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1);
 
 
 void MKOSMain(void)
@@ -18,9 +57,15 @@ void MKOSMain(void)
 
     char *p = (char *)0xa0000;
 
+	drawRect(p, 320, COLFF0000,  20,  20, 120, 120);
+	drawRect(p, 320, COL00FF00,  70,  50, 170, 150);
+	drawRect(p, 320, COL0000FF, 120,  80, 220, 180);
+
+/*
     for (i = 0; i <= 0xffff; i++) {
-        asmWriteMemory8(p+i, i&0x0f);
+        asmWriteMemory8((int)(p+i), i&0x0f);
     }
+*/
 
     while (1)
         asmHlt();
@@ -65,5 +110,15 @@ void setPalette(int start, int end, unsigned char *rgb)
 	}
 
 	asmStoreEflags(eflags);
+	return;
+}
+
+void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1)
+{
+	int x, y;
+	for (y = y0; y <= y1; y++) {
+		for (x = x0; x <= x1; x++)
+			vram[y * screenWidth + x] = c;
+	}
 	return;
 }
