@@ -3,12 +3,10 @@
 ; 编译方法：nasm pmtest1.asm -o pmtest1.com
 ; ==========================================
 %include	"pm.inc"	; 常量, 宏, 以及一些说明 预处理指令都以%号打头
-CYLS	EQU		0x0ff0
-LEDS	EQU		0x0ff1
-VMODE	EQU		0x0ff2		
+VMODE	EQU		0x0ff0		
 SCRNX	EQU		0x0ff4		
-SCRNY	EQU		0x0ff6		
-VRAM	EQU		0x0ff8
+SCRNY	EQU		0x0ff8		
+VRAM	EQU		0x0ffc
 
 
 IPLPOS	EQU		0x00100000	;for ipl
@@ -58,12 +56,6 @@ LABEL_BEGIN:
 		MOV		WORD [SCRNX],320
 		MOV		WORD [SCRNY],200
 		MOV		DWORD [VRAM],0x000a0000
-
-
-		MOV		AH,0x02
-		INT		0x16 		
-		MOV		[LEDS],AL
-
 
 		MOV		AL,0xff
 		OUT		0x21,AL

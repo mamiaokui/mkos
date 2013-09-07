@@ -40,9 +40,14 @@ extern void asmStoreEflags(int eflags);
 #define COL008484		14
 #define COL848484		15
 
-#define SCREENWIDTH    320
-#define SCREENHEIGHT   200
-#define VRAM (char*)(0xa0000)
+#define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
+
+typedef struct  {
+    int m_vmode;
+    int m_screenWidth;
+    int m_screenHeight;
+    void* m_vram;
+} BootInfo;
 
 
 
@@ -55,26 +60,32 @@ void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int
 void MKOSMain(void)
 {
     int i;
-	initPalette(); //not working, don't know the reason.
 
-    char *p = (char *)0xa0000;
+    BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
+    int *temp = (int*)(BOOTINFO_ADDRESS);;
 
-	drawRect(VRAM, SCREENWIDTH, COL008484,  0,         0,          SCREENWIDTH -  1, SCREENHEIGHT - 29);
-	drawRect(VRAM, SCREENWIDTH, COLC6C6C6,  0,         SCREENHEIGHT - 28, SCREENWIDTH -  1, SCREENHEIGHT - 28);
-	drawRect(VRAM, SCREENWIDTH, COLFFFFFF,  0,         SCREENHEIGHT - 27, SCREENWIDTH -  1, SCREENHEIGHT - 27);
-	drawRect(VRAM, SCREENWIDTH, COLC6C6C6,  0,         SCREENHEIGHT - 26, SCREENWIDTH -  1, SCREENHEIGHT -  1);
+    int screenWidth = bootInfo->m_screenWidth;
+    int screenHeight = bootInfo->m_screenHeight;
+    char* vram = (char*)bootInfo->m_vram;
 
-	drawRect(VRAM, SCREENWIDTH, COLFFFFFF,  3,         SCREENHEIGHT - 24, 59,         SCREENHEIGHT - 24);
-	drawRect(VRAM, SCREENWIDTH, COLFFFFFF,  2,         SCREENHEIGHT - 24,  2,         SCREENHEIGHT -  4);
-	drawRect(VRAM, SCREENWIDTH, COL848484,  3,         SCREENHEIGHT -  4, 59,         SCREENHEIGHT -  4);
-	drawRect(VRAM, SCREENWIDTH, COL848484, 59,         SCREENHEIGHT - 23, 59,         SCREENHEIGHT -  5);
-	drawRect(VRAM, SCREENWIDTH, COL000000,  2,         SCREENHEIGHT -  3, 59,         SCREENHEIGHT -  3);
-	drawRect(VRAM, SCREENWIDTH, COL000000, 60,         SCREENHEIGHT - 24, 60,         SCREENHEIGHT -  3);
+	initPalette();     
 
-	drawRect(VRAM, SCREENWIDTH, COL848484, SCREENWIDTH - 47, SCREENHEIGHT - 24, SCREENWIDTH -  4, SCREENHEIGHT - 24);
-	drawRect(VRAM, SCREENWIDTH, COL848484, SCREENWIDTH - 47, SCREENHEIGHT - 23, SCREENWIDTH - 47, SCREENHEIGHT -  4);
-	drawRect(VRAM, SCREENWIDTH, COLFFFFFF, SCREENWIDTH - 47, SCREENHEIGHT -  3, SCREENWIDTH -  4, SCREENHEIGHT -  3);
-	drawRect(VRAM, SCREENWIDTH, COLFFFFFF, SCREENWIDTH -  3, SCREENHEIGHT - 24, SCREENWIDTH -  3, SCREENHEIGHT -  3);
+	drawRect(vram, screenWidth, COL008484,  0,         0,          screenWidth -  1, screenHeight - 29);
+	drawRect(vram, screenWidth, COLC6C6C6,  0,         screenHeight - 28, screenWidth -  1, screenHeight - 28);
+	drawRect(vram, screenWidth, COLFFFFFF,  0,         screenHeight - 27, screenWidth -  1, screenHeight - 27);
+	drawRect(vram, screenWidth, COLC6C6C6,  0,         screenHeight - 26, screenWidth -  1, screenHeight -  1);
+
+	drawRect(vram, screenWidth, COLFFFFFF,  3,         screenHeight - 24, 59,         screenHeight - 24);
+	drawRect(vram, screenWidth, COLFFFFFF,  2,         screenHeight - 24,  2,         screenHeight -  4);
+	drawRect(vram, screenWidth, COL848484,  3,         screenHeight -  4, 59,         screenHeight -  4);
+	drawRect(vram, screenWidth, COL848484, 59,         screenHeight - 23, 59,         screenHeight -  5);
+	drawRect(vram, screenWidth, COL000000,  2,         screenHeight -  3, 59,         screenHeight -  3);
+	drawRect(vram, screenWidth, COL000000, 60,         screenHeight - 24, 60,         screenHeight -  3);
+
+	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 24, screenWidth -  4, screenHeight - 24);
+	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
+	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
+	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
 
 
 
