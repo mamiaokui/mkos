@@ -154,14 +154,14 @@ void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
 {
     char* fontBase = (char*)(0x10000); //font data in memory
 	int i;
-	char *p, d /* data */;
+	char *vramPoint, line ;
     char* font = fontBase + ascii * 16; //every string cost 16 * sizeof(char)
 	for (i = 0; i < 16; i++) {
-		p = vram + (y + i) * xsize + x;
-		d = font[i];
+		vramPoint = vram + (y + i) * xsize + x;
+		line = font[i];
         int j;
         for (j = 0; j <= 7; j++) {
-            if ((d & 1<<(7-j)) != 0) { p[j] = c;}
+            if ((line & 1<<(7-j)) != 0) { vramPoint[j] = c;}
         }
 	}
 	return;
