@@ -9,9 +9,11 @@ SCRNY	EQU		0x0ff8
 VRAM	EQU		0x0ffc
 
 
-IPLPOS	EQU		0x00100000	;for ipl
-ASMHEADPOS	EQU		0x00008200 ;for asmhead
-BOTPAK	EQU		0x00280000	;for bootpack
+IPLPOS	EQU		0x00100000	;for IPL
+ASMHEADPOS	EQU		0x00008200 ;for AsmHead
+BOOTPROGRAM	EQU		0x00280000	;for BootProgram
+FONTDATA	EQU		0x0010000	;for BootProgram
+        
 
 
         
@@ -76,11 +78,19 @@ LABEL_BEGIN:
 		MOV		ECX,bootpack-0x8200
 		CALL	memcpy
 
-; for bootpack
-
-		MOV		EBX, bootpack
+;;; for font
+   		MOV		EBX, bootpack
         MOV     ESI, EBX
-        MOV     EDI, BOTPAK
+        MOV     EDI, FONTDATA
+        MOV     ECX, 3592/4
+        CALL    memcpy
+
+
+; for bootprogram
+
+		MOV		EBX, bootpack + 3592
+        MOV     ESI, EBX
+        MOV     EDI, BOOTPROGRAM
         MOV     ECX, 1024*1024*5/4
         CALL    memcpy
 
@@ -135,7 +145,7 @@ LABEL_BEGIN:
 
 ;以下才是真正的数据段，此处与数据段段描述符相呼应。
 LABEL_SEG_CODE32:
-	jmp	BOTPAK+0x1000
+	jmp	BOOTPROGRAM+0x1000
 
 SegCode32Len	equ	$ - LABEL_SEG_CODE32  ;表示从LABEL_SEG_CODE32:到此处的地址之距离
 ; END of [SECTION .s32]

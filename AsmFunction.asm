@@ -1,4 +1,4 @@
-; naskfunc
+; AsmFunction.asm
 ; TAB=4
 [BITS 32]
 
@@ -8,6 +8,7 @@
         GLOBAL  asmOut8
         GLOBAL  asmLoadEflags
         GLOBAL  asmStoreEflags
+        GLOBAL  asmLog
 
 
 
@@ -42,4 +43,12 @@ asmStoreEflags: ;void asmStoreEflags(int eflags);
 		MOV		EAX,[ESP+4]
 		PUSH	EAX
 		POPFD		; POP EAX TO EFLAGS
+		RET
+
+
+asmLog: ;void asmStoreEflags(int eflags);
+        MOV		EAX, [ESP+4]
+        MOV [0x8888], EAX
+LBhlt:  hlt
+        jmp LBhlt
 		RET

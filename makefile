@@ -13,11 +13,15 @@ BootProgram.o: BootProgram.c
 AsmFunction.o: AsmFunction.asm
 	nasm -f elf  AsmFunction.asm -o AsmFunction.o
 
-BootProgramLink.o: AsmFunction.o BootProgram.o
+FontData.o: FontData.asm
+	nasm  FontData.asm -o FontData.o
+
+
+BootProgramLink.o: AsmFunction.o BootProgram.o 
 	ld -m elf_i386 -Ttext 0x290000  BootProgram.o AsmFunction.o -o BootProgramLink.o
 
-OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
-	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img
+OS.img: IPL.o AsmHead.o FontData.o BootProgramLink.o RESB.o
+	cat IPL.o AsmHead.o FontData.o BootProgramLink.o RESB.o > OS.img
 
 all: OS.img
 	@echo ok

@@ -4,6 +4,7 @@ extern void asmCli(void);
 extern void asmOut8(int port, int data);
 extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
+extern void asmLog(int value);
 /*
 #define BLACK 0
 #define BLACKRED 1
@@ -41,6 +42,7 @@ extern void asmStoreEflags(int eflags);
 #define COL848484		15
 
 #define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
+#define FONT_ADDRESS 0x0010000
 
 typedef struct  {
     int m_vmode;
@@ -55,10 +57,13 @@ typedef struct  {
 void initPalette(void);
 void setPalette(int start, int end, unsigned char *rgb);
 void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1);
+void printFont(char *vram, int xsize, int x, int y, char c, char character);
+void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
 
 
 void MKOSMain(void)
 {
+//	extern char asmFont[4096];
     int i;
 
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
@@ -86,8 +91,9 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
+    char* font = (char*)(0x10000);
 
-
+	printFont(vram, screenWidth,  8, 8, COLFFFFFF, 'A');
 
     while (1)
         asmHlt();
@@ -114,7 +120,6 @@ void initPalette(void)
 		0x00, 0x84, 0x84, // light dark blue
 		0x84, 0x84, 0x84 // dark gray
 	};
-
     setPalette(0, 15, table_rgb);
 	return;
 }
@@ -142,5 +147,39 @@ void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int
 		for (x = x0; x <= x1; x++)
 			vram[y * screenWidth + x] = c;
 	}
+	return;
+}
+
+
+void printFont(char *vram, int xsize, int x, int y, char c, char character)
+{
+    char* fontData = (char*)(0x10000);
+	int i;
+	char *p, d /* data */;
+    char* font = fontData + character * 16;
+	for (i = 0; i < 16; i++) {
+		p = vram + (y + i) * xsize + x;
+		d = font[i];
+		if ((d & 0x80) != 0) { p[0] = c; }
+		if ((d & 0x40) != 0) { p[1] = c; }
+		if ((d & 0x20) != 0) { p[2] = c; }
+		if ((d & 0x10) != 0) { p[3] = c; }
+		if ((d & 0x08) != 0) { p[4] = c; }
+		if ((d & 0x04) != 0) { p[5] = c; }
+		if ((d & 0x02) != 0) { p[6] = c; }
+		if ((d & 0x01) != 0) { p[7] = c; }
+	}
+	return;
+}
+
+void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s)
+{
+    /*
+	for (; *s != 0x00; s++) {
+		printFont(vram, xsize, x, y, c, hankaku + *s * 16);
+		x += 8;
+	}
+    */
+
 	return;
 }
