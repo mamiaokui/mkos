@@ -150,27 +150,24 @@ void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int
 	return;
 }
 
-
-void printFont(char *vram, int xsize, int x, int y, char c, char character)
+void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
 {
-    char* fontData = (char*)(0x10000);
+    char* fontBase = (char*)(0x10000); //font data in memory
 	int i;
 	char *p, d /* data */;
-    char* font = fontData + character * 16;
+    char* font = fontBase + ascii * 16; //every string cost 16 * sizeof(char)
 	for (i = 0; i < 16; i++) {
 		p = vram + (y + i) * xsize + x;
 		d = font[i];
-		if ((d & 0x80) != 0) { p[0] = c; }
-		if ((d & 0x40) != 0) { p[1] = c; }
-		if ((d & 0x20) != 0) { p[2] = c; }
-		if ((d & 0x10) != 0) { p[3] = c; }
-		if ((d & 0x08) != 0) { p[4] = c; }
-		if ((d & 0x04) != 0) { p[5] = c; }
-		if ((d & 0x02) != 0) { p[6] = c; }
-		if ((d & 0x01) != 0) { p[7] = c; }
+        int j;
+        for (j = 0; j <= 7; j++) {
+            if ((d & 1<<(7-j)) != 0) { p[j] = c;}
+        }
 	}
 	return;
 }
+
+
 
 void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s)
 {
