@@ -23,5 +23,5 @@ all: OS.img
 	@echo ok
 
 clean:
-	rm *.o
-	rm *.img
+	rm -f *.o
+	rm -f *.img
