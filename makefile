@@ -31,3 +31,6 @@ all: OS.img
 clean:
 	rm -f *.o
 	rm -f *.img
+
+debug: all
+	qemu -s -S -smp cores=1,threads=1,maxcpus=1 OS.img

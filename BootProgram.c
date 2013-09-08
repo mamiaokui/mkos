@@ -64,6 +64,7 @@ void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
 void MKOSMain(void)
 {
 //	extern char asmFont[4096];
+//    asmLog(0);
     int i;
 
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
