@@ -93,16 +93,13 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
     char* font = (char*)(0x10000);
 
-    char a[4] = {'a', 'b', 'c', '\0'};
+    char *a = "abcdefghijkl";
 	printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
 
     while (1)
         asmHlt();
 }
 
-
-void initPalette(void)
-{
 	unsigned char table_rgb[16 * 3] = {
 		0x00, 0x00, 0x00, // black
 		0xff, 0x00, 0x00, // bright red
@@ -121,6 +118,11 @@ void initPalette(void)
 		0x00, 0x84, 0x84, // light dark blue
 		0x84, 0x84, 0x84 // dark gray
 	};
+
+
+void initPalette(void)
+{
+
     setPalette(0, 15, table_rgb);
 	return;
 }

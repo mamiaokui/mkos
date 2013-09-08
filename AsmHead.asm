@@ -12,7 +12,8 @@ VRAM	EQU		0x0ffc
 IPLPOS	EQU		0x00100000	;for IPL
 ASMHEADPOS	EQU		0x00008200 ;for AsmHead
 BOOTPROGRAM	EQU		0x00280000	;for BootProgram
-FONTDATA	EQU		0x0010000	;for BootProgram
+BaseOfKernelFilePhyAddr EQU		0x00280000	;for BootProgram
+FONTDATA	EQU		0x0010000	;for FONTDATA
         
 
 
@@ -88,7 +89,7 @@ LABEL_BEGIN:
 
 ; for bootprogram
 
-		MOV		EBX, bootpack + 3592
+		MOV		EBX, bootpack + 3952
         MOV     ESI, EBX
         MOV     EDI, BOOTPROGRAM
         MOV     ECX, 1024*1024*5/4
@@ -145,7 +146,75 @@ LABEL_BEGIN:
 
 ;以下才是真正的数据段，此处与数据段段描述符相呼应。
 LABEL_SEG_CODE32:
-	jmp	BOOTPROGRAM+0x1000
+        mov eax, 0x100000
+        mov esp, eax
+
+        call InitKernel
+
+	jmp	BOOTPROGRAM + 0x1000
+
+InitKernel:	; 遍历每一个 Program Header，根据 Program Header 中的信息来确定把什么放进内存，放到什么位置，以及放多少。
+	xor	esi, esi
+	mov	cx, word [BaseOfKernelFilePhyAddr + 2Ch]; ┓ ecx <- pELFHdr->e_phnum
+	movzx	ecx, cx					; ┛
+	mov	esi, [BaseOfKernelFilePhyAddr + 1Ch]	; esi <- pELFHdr->e_phoff
+	add	esi, BaseOfKernelFilePhyAddr		; esi <- OffsetOfKernel + pELFHdr->e_phoff
+	.Begin:
+	mov	eax, [esi + 0]
+	cmp	eax, 0				; PT_NULL
+	jz	.NoAction
+	push	dword [esi + 010h]		; size	┓
+	mov	eax, [esi + 04h]		;	┃
+	add	eax, BaseOfKernelFilePhyAddr	;	┣ ::memcpy(	(void*)(pPHdr->p_vaddr),
+	push	eax				; src	┃		uchCode + pPHdr->p_offset,
+	push	dword [esi + 08h]		; dst	┃		pPHdr->p_filesz;
+	call	MemCpy				;	┃
+	add	esp, 12				;	┛
+	.NoAction:
+	add	esi, 020h			; esi += pELFHdr->e_phentsize
+	dec	ecx
+	jnz	.Begin
+
+	ret
+; ------------------------------------------------------------------------
+; 内存拷贝，仿 memcpy
+; ------------------------------------------------------------------------
+; void* MemCpy(void* es:pDest, void* ds:pSrc, int iSize);
+; ------------------------------------------------------------------------
+MemCpy:
+	push	ebp
+	mov	ebp, esp
+
+	push	esi
+	push	edi
+	push	ecx
+
+	mov	edi, [ebp + 8]	; Destination
+	mov	esi, [ebp + 12]	; Source
+	mov	ecx, [ebp + 16]	; Counter
+.1:
+	cmp	ecx, 0		; 判断计数器
+	jz	.2		; 计数器为零时跳出
+
+	mov	al, [ds:esi]		; ┓
+	inc	esi			; ┃
+					; ┣ 逐字节移动
+	mov	byte [es:edi], al	; ┃
+	inc	edi			; ┛
+
+	dec	ecx		; 计数器减一
+	jmp	.1		; 循环
+.2:
+	mov	eax, [ebp + 8]	; 返回值
+
+	pop	ecx
+	pop	edi
+	pop	esi
+	mov	esp, ebp
+	pop	ebp
+
+	ret			; 函数结束，返回
+
 
 SegCode32Len	equ	$ - LABEL_SEG_CODE32  ;表示从LABEL_SEG_CODE32:到此处的地址之距离
 ; END of [SECTION .s32]
