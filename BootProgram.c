@@ -5,6 +5,7 @@ extern void asmOut8(int port, int data);
 extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
+extern char globalString;
 /*
 #define BLACK 0
 #define BLACKRED 1
@@ -63,8 +64,6 @@ void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
 
 void MKOSMain(void)
 {
-//	extern char asmFont[4096];
-//    asmLog(0);
     int i;
 
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
@@ -94,8 +93,7 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
     char* font = (char*)(0x10000);
 
-    char *a = "abcdefghijkl";
-	printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
+    printString(vram, screenWidth,  8, 8, COLFFFFFF, (char*)(&globalString));
 
     while (1)
         asmHlt();

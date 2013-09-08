@@ -9,6 +9,7 @@
         GLOBAL  asmLoadEflags
         GLOBAL  asmStoreEflags
         GLOBAL  asmLog
+        GLOBAL  globalString
 
 
 
@@ -49,6 +50,13 @@ asmStoreEflags: ;void asmStoreEflags(int eflags);
 asmLog: ;void asmStoreEflags(int eflags);
         MOV		EAX, [ESP+4]
         MOV [0x8888], EAX
+        jmp LBhlt
+        
 LBhlt:  hlt
         jmp LBhlt
 		RET
+        
+
+[SECTION .data]
+globalString:
+        db "I love mamk", 0x0
