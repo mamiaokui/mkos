@@ -7,24 +7,6 @@ extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
 extern char globalString;
 extern char globalFont;
-/*
-#define BLACK 0
-#define BLACKRED 1
-#define BRIGHTGREEN 2
-#define BRIGHTYELLOW 3
-#define BRIGHTBLUE 4
-#define BRIGHTPURPLE 5
-#define LIGHTBLUE 6
-#define WHITE 7
-#define BRIGHTGRAY 8
-#define DARKRED 9
-#define DARKGREEN 10
-#define DARKYELLOW 11
-#define DARKBLUE 12
-#define DARKPURPLE 13 
-#define LIGHTDARKBLUE 14
-#define DARKGRAY 15
-*/
 
 #define COL000000		0
 #define COLFF0000		1
@@ -44,7 +26,6 @@ extern char globalFont;
 #define COL848484		15
 
 #define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
-#define FONT_ADDRESS 0x0010000
 
 typedef struct  {
     int m_vmode;
@@ -70,8 +51,6 @@ void intToCharArray(char* dest, int number);
 
 void MKOSMain(void)
 {
-    int i;
-
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
     int *temp = (int*)(BOOTINFO_ADDRESS);;
 
@@ -128,7 +107,6 @@ void MKOSMain(void)
 
 void initPalette(void)
 {
-
     setPalette(0, 15, table_rgb);
 	return;
 }
