@@ -44,6 +44,9 @@ void printFont(char *vram, int xsize, int x, int y, char c, char character);
 void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
 void intToCharArray(char* dest, int number);
 void stringcat(char* begin, char* end, char* result);
+void initScreen(char *vram, int width, int height);
+//the mouse cursor size is 16*16
+void initMouseCursor(char *mouseBuffer256, char backgroundColor);
 
 #define bool char
 #define true 1
@@ -60,23 +63,7 @@ void MKOSMain(void)
     char* vram = (char*)bootInfo->m_vram;
 
 	initPalette();     
-
-	drawRect(vram, screenWidth, COL008484,  0,         0,          screenWidth -  1, screenHeight - 29);
-	drawRect(vram, screenWidth, COLC6C6C6,  0,         screenHeight - 28, screenWidth -  1, screenHeight - 28);
-	drawRect(vram, screenWidth, COLFFFFFF,  0,         screenHeight - 27, screenWidth -  1, screenHeight - 27);
-	drawRect(vram, screenWidth, COLC6C6C6,  0,         screenHeight - 26, screenWidth -  1, screenHeight -  1);
-
-	drawRect(vram, screenWidth, COLFFFFFF,  3,         screenHeight - 24, 59,         screenHeight - 24);
-	drawRect(vram, screenWidth, COLFFFFFF,  2,         screenHeight - 24,  2,         screenHeight -  4);
-	drawRect(vram, screenWidth, COL848484,  3,         screenHeight -  4, 59,         screenHeight -  4);
-	drawRect(vram, screenWidth, COL848484, 59,         screenHeight - 23, 59,         screenHeight -  5);
-	drawRect(vram, screenWidth, COL000000,  2,         screenHeight -  3, 59,         screenHeight -  3);
-	drawRect(vram, screenWidth, COL000000, 60,         screenHeight - 24, 60,         screenHeight -  3);
-
-	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 24, screenWidth -  4, screenHeight - 24);
-	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
-	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
-	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
+    initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[10];
 
     intToCharArray(charScreenWidth, screenWidth);
@@ -88,7 +75,7 @@ void MKOSMain(void)
     printString(vram, screenWidth, 8, 8, COL000000, result);
     
 
-    while (1)
+    while (true)
         asmHlt();
 }
 
@@ -235,4 +222,63 @@ void stringcat(char* begin, char* end, char* result)
         ++resultIndex;
     }
     result[resultIndex] = '\0';
+}
+
+void initScreen(char *vram, int screenWidth, int screenHeight)
+{
+	drawRect(vram, screenWidth, COL008484,  0,         0,          screenWidth -  1, screenHeight - 29);
+	drawRect(vram, screenWidth, COLC6C6C6,  0,         screenHeight - 28, screenWidth -  1, screenHeight - 28);
+	drawRect(vram, screenWidth, COLFFFFFF,  0,         screenHeight - 27, screenWidth -  1, screenHeight - 27);
+	drawRect(vram, screenWidth, COLC6C6C6,  0,         screenHeight - 26, screenWidth -  1, screenHeight -  1);
+
+	drawRect(vram, screenWidth, COLFFFFFF,  3,         screenHeight - 24, 59,         screenHeight - 24);
+	drawRect(vram, screenWidth, COLFFFFFF,  2,         screenHeight - 24,  2,         screenHeight -  4);
+	drawRect(vram, screenWidth, COL848484,  3,         screenHeight -  4, 59,         screenHeight -  4);
+	drawRect(vram, screenWidth, COL848484, 59,         screenHeight - 23, 59,         screenHeight -  5);
+	drawRect(vram, screenWidth, COL000000,  2,         screenHeight -  3, 59,         screenHeight -  3);
+	drawRect(vram, screenWidth, COL000000, 60,         screenHeight - 24, 60,         screenHeight -  3);
+
+	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 24, screenWidth -  4, screenHeight - 24);
+	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
+	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
+	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
+}
+
+void initMouseCursor(char *mouseBuffer256, char backgroundColor)
+{
+    static char cursor[16][16] = {
+		"**************..",
+		"*OOOOOOOOOOO*...",
+		"*OOOOOOOOOO*....",
+		"*OOOOOOOOO*.....",
+		"*OOOOOOOO*......",
+		"*OOOOOOO*.......",
+		"*OOOOOOO*.......",
+		"*OOOOOOOO*......",
+		"*OOOO**OOO*.....",
+		"*OOO*..*OOO*....",
+		"*OO*....*OOO*...",
+		"*O*......*OOO*..",
+		"**........*OOO*.",
+		"*..........*OOO*",
+		"............*OO*",
+		".............***"
+	};
+	int x, y;
+
+	for (x = 0; x < 16; x++) {
+		for (y = 0; y < 16; y++) {
+			if (cursor[x][y] == '*') {
+				mouseBuffer256[x * 16 + y] = COL000000;
+			}
+			if (cursor[x][y] == 'O') {
+				mouseBuffer256[x * 16 + y] = COLFFFFFF;
+			}
+			if (cursor[x][y] == '.') {
+				mouseBuffer256[x * 16 + y] = backgroundColor;
+			}
+		}
+	}
+	return;
+
 }
