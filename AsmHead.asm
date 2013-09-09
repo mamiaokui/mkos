@@ -20,7 +20,8 @@ VRAM	equ		0x0ffc
 
 IPL_POS	    equ		0x00100000	;for IPL
 ASMHEAD_POS	equ		0x00008200  ;for AsmHead
-BOOTPROGRAM_POS	equ		0x00280000	;for BootProgram
+BOOTPROGRAM_POS	equ		0x00110000	;for BootProgram
+BOOTPROGRAM_POS_RELLOC	equ		0x00280000	;for BootProgram
         
 
 
@@ -153,7 +154,7 @@ LABEL_SEG_CODE32:
     mov esp, StackTop
     call RellocELF
 
-	jmp	BOOTPROGRAM_POS
+	jmp	BOOTPROGRAM_POS_RELLOC
 
 ; 遍历每一个 Program Header，根据 Program Header 中的信息来确定把什么放进内存，放到什么位置，以及放多少。
 RellocELF:	
@@ -185,12 +186,15 @@ RellocELF:
 	ret
 
 memcpy32:
+   	push	ebp
+	mov	ebp, esp
+
    	push	esi
 	push	edi
 	push	ecx
-    mov ecx, [esp + 24]
-    mov esi, [esp + 20]
-    mov edi, [esp + 16]
+    mov ecx, [ebp + 16]
+    mov esi, [ebp + 12]
+    mov edi, [ebp + 8]
 copying:        
     mov		eax,[esi]
     inc		esi
@@ -199,9 +203,13 @@ copying:
     sub		ecx,1
     JNZ		copying
 cpyend:
+   	mov	eax, [ebp + 8]	; 返回值
    	pop	ecx
 	pop	edi
 	pop	esi
+   	mov	esp, ebp
+	pop	ebp
+
     ret
 
 bootprogram:

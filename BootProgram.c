@@ -97,11 +97,10 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
-//    char* font = (char*)(globalFont);
-//    char a[20];
+    char a[20];
 
-//    intToCharArray(a, -1);
-//    printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
+    intToCharArray(a, -1234567);
+    printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
 
     while (1)
         asmHlt();
@@ -162,7 +161,7 @@ void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int
 
 void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
 {
-    char* fontBase = (char*)(0x10000); //font data in memory
+    char* fontBase = (char*)(&globalFont); //font data in memory
 	int i;
 	char *vramPoint, line ;
     char* font = fontBase + ascii * 16; //every string cost 16 * sizeof(char)
