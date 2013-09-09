@@ -43,6 +43,7 @@ void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int
 void printFont(char *vram, int xsize, int x, int y, char c, char character);
 void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
 void intToCharArray(char* dest, int number);
+void stringcat(char* begin, char* end, char* result);
 
 #define bool char
 #define true 1
@@ -76,10 +77,16 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
-    char a[20];
+    char charScreenWidth[10];
 
-    intToCharArray(a, -1234567);
-    printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
+    intToCharArray(charScreenWidth, screenWidth);
+
+    char* screenWidthStr = "Screen Width = ";
+    char result[30];
+    stringcat(screenWidthStr, charScreenWidth, result);
+
+    printString(vram, screenWidth, 8, 8, COL000000, result);
+    
 
     while (1)
         asmHlt();
@@ -208,4 +215,24 @@ void intToCharArray(char* dest, int number)
         dest[index -i] = temp;
     }
 
+}
+
+void stringcat(char* begin, char* end, char* result)
+{
+    int beginIndex = 0;
+    int resultIndex = 0;
+    while (begin[beginIndex] != '\0')
+    {
+        result[resultIndex] = begin[beginIndex];
+        ++beginIndex;
+        ++resultIndex;
+    }
+    int endIndex = 0;
+    while(end[endIndex] != '\0')
+    {
+        result[resultIndex] = end[endIndex];
+        ++endIndex;
+        ++resultIndex;
+    }
+    result[resultIndex] = '\0';
 }
