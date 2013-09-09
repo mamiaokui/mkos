@@ -13,6 +13,7 @@
 
 
 
+
 [SECTION .text]
 asmHlt:	; void asmHlt(void);
 		HLT
@@ -60,3 +61,4 @@ LBhlt:  hlt
 [SECTION .data]
 globalString:
         db "I love mamk", 0x0
+

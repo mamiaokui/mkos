@@ -6,24 +6,7 @@ extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
 extern char globalString;
-/*
-#define BLACK 0
-#define BLACKRED 1
-#define BRIGHTGREEN 2
-#define BRIGHTYELLOW 3
-#define BRIGHTBLUE 4
-#define BRIGHTPURPLE 5
-#define LIGHTBLUE 6
-#define WHITE 7
-#define BRIGHTGRAY 8
-#define DARKRED 9
-#define DARKGREEN 10
-#define DARKYELLOW 11
-#define DARKBLUE 12
-#define DARKPURPLE 13 
-#define LIGHTDARKBLUE 14
-#define DARKGRAY 15
-*/
+extern char globalFont;
 
 #define COL000000		0
 #define COLFF0000		1
@@ -43,7 +26,6 @@ extern char globalString;
 #define COL848484		15
 
 #define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
-#define FONT_ADDRESS 0x0010000
 
 typedef struct  {
     int m_vmode;
@@ -69,8 +51,6 @@ void intToCharArray(char* dest, int number);
 
 void MKOSMain(void)
 {
-    int i;
-
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
     int *temp = (int*)(BOOTINFO_ADDRESS);;
 
@@ -96,10 +76,9 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
-    char* font = (char*)(0x10000);
     char a[20];
 
-    intToCharArray(a, -1);
+    intToCharArray(a, -1234567);
     printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
 
     while (1)
@@ -128,7 +107,6 @@ void MKOSMain(void)
 
 void initPalette(void)
 {
-
     setPalette(0, 15, table_rgb);
 	return;
 }
@@ -161,7 +139,7 @@ void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int
 
 void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
 {
-    char* fontBase = (char*)(0x10000); //font data in memory
+    char* fontBase = (char*)(&globalFont); //font data in memory
 	int i;
 	char *vramPoint, line ;
     char* font = fontBase + ascii * 16; //every string cost 16 * sizeof(char)
