@@ -60,6 +60,11 @@ void setPalette(int start, int end, unsigned char *rgb);
 void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1);
 void printFont(char *vram, int xsize, int x, int y, char c, char character);
 void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
+void intToCharArray(char* dest, int number);
+
+#define bool char
+#define true 1
+#define false 0
 
 
 void MKOSMain(void)
@@ -92,8 +97,10 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
     char* font = (char*)(0x10000);
+    char a[20];
 
-    printString(vram, screenWidth,  8, 8, COLFFFFFF, (char*)(&globalString));
+    intToCharArray(a, -1);
+    printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
 
     while (1)
         asmHlt();
@@ -178,4 +185,49 @@ void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s)
         x += 8;
     }
 	return;
+}
+
+void intToCharArray(char* dest, int number)
+{
+    int index = 0;
+    bool isNegative = false;
+    if (number < 0)
+    {
+        isNegative = true;
+        number = 0 - number;
+    }
+
+    if (number == 0)
+    {
+        dest[index++] = '0';
+        dest[index++] = '\0';
+        return;
+    }
+
+    while(number!=0)
+    {
+        int digit = number - (number/10)*10;
+        char digitChar = digit + '0';
+        dest[index] = digitChar;
+        number = number/10;
+        index++;        
+    }
+
+    if (isNegative)
+    {
+        dest[index] = '-';
+        index++;
+    }
+    dest[index] = '\0';
+
+    index--;// forget '\0'
+    
+    int i;
+    for (i = 0; i <= index / 2; i++)
+    {
+        int temp = dest[i];
+        dest[i] = dest[index - i];
+        dest[index -i] = temp;
+    }
+
 }

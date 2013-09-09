@@ -26,7 +26,7 @@ OS.img: IPL.o AsmHead.o FontData.o BootProgramLink.o RESB.o
 	cat IPL.o AsmHead.o FontData.o BootProgramLink.o RESB.o > OS.img
 
 all: OS.img
-	@echo ok
+	@ls -l OS.img	
 
 clean:
 	rm -f *.o

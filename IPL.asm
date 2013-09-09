@@ -24,7 +24,7 @@ CYLS	EQU		2
 		DD		0xffffffff	
 		DB		"MKOSMKOS   "
 		DB		"FAT12   "	
-		RESB	18			
+		TIMES  18 DB 0x00
 
 
 entry:
@@ -93,7 +93,6 @@ msg:
 		DB		"load error"
 		DB		0x0a		
 		DB		0
-
-		RESB	510-($-$$)	
+        TIMES  510-($-$$) DB 0x00
 
 		DB		0x55, 0xaa
