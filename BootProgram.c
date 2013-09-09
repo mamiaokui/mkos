@@ -6,6 +6,7 @@ extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
 extern char globalString;
+extern char globalFont;
 /*
 #define BLACK 0
 #define BLACKRED 1
@@ -96,11 +97,11 @@ void MKOSMain(void)
 	drawRect(vram, screenWidth, COL848484, screenWidth - 47, screenHeight - 23, screenWidth - 47, screenHeight -  4);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth - 47, screenHeight -  3, screenWidth -  4, screenHeight -  3);
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
-    char* font = (char*)(0x10000);
-    char a[20];
+//    char* font = (char*)(globalFont);
+//    char a[20];
 
-    intToCharArray(a, -1);
-    printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
+//    intToCharArray(a, -1);
+//    printString(vram, screenWidth,  8, 8, COLFFFFFF, a);
 
     while (1)
         asmHlt();
