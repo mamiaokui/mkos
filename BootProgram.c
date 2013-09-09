@@ -47,6 +47,9 @@ void stringcat(char* begin, char* end, char* result);
 void initScreen(char *vram, int width, int height);
 //the mouse cursor size is 16*16
 void initMouseCursor(char *mouseBuffer256, char backgroundColor);
+void paintBlock(char *vram, int screenWidth, int blockWidth,
+	int blockHeight, int paintPositionX, int paintPositionY, char *imageData);
+
 
 #define bool char
 #define true 1
@@ -73,6 +76,13 @@ void MKOSMain(void)
     stringcat(screenWidthStr, charScreenWidth, result);
 
     printString(vram, screenWidth, 8, 8, COL000000, result);
+
+    char mouseCursorImage[256];
+	int mx = (screenWidth - 16) / 2;
+	int my = (screenHeight - 28 - 16) / 2;
+
+    initMouseCursor(mouseCursorImage, COL008484);
+    paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
     
 
     while (true)
@@ -281,4 +291,16 @@ void initMouseCursor(char *mouseBuffer256, char backgroundColor)
 	}
 	return;
 
+}
+
+
+void paintBlock(char *vram, int screenWidth, int blockWidth,
+	int blockHeight, int paintPositionX, int paintPositionY, char *imageData)
+{
+    int x, y;
+    for (x = 0; x < blockHeight; x++)
+        for ( y = 0; y < blockWidth; y++)
+        {
+            vram[paintPositionY * screenWidth + paintPositionX + x * screenWidth + y] = imageData[x * blockWidth + y];
+        }
 }
