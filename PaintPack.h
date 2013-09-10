@@ -1,3 +1,5 @@
+#ifndef PAINTPACK_H
+#define PAINTPACK_H
 #define COL000000		0
 #define COLFF0000		1
 #define COL00FF00		2
@@ -42,3 +44,5 @@ unsigned char table_rgb[16 * 3] = {
 		0x00, 0x84, 0x84, // light dark blue
 		0x84, 0x84, 0x84 // dark gray
 	};
+
+#endif

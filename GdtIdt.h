@@ -1,3 +1,5 @@
+#ifndef GDTIDT_H
+#define GDTIDT_H
 typedef struct {
     short limit_low, base_low;
     char base_mid, access_right;
@@ -14,3 +16,4 @@ void initGdtIdt();
 //set Global Segment Description Table Item
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight);
 void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int accessRight);
+#endif

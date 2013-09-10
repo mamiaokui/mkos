@@ -1,3 +1,5 @@
+#ifndef ASMPACK_H
+#define ASMPACK_H
 extern void asmHlt(void);
 extern void asmWriteMemory8(int address, int value);
 extern void asmCli(void);
@@ -10,3 +12,4 @@ extern void asmLoadIDTR(int size, int address);
 extern char asmGlobalFont;
 
 #define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
+#endif

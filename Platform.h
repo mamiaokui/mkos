@@ -1,3 +1,5 @@
+#ifndef PLATFORM_H
+#define PLATFORM_H
 typedef struct {
     int m_vmode;
     int m_screenWidth;
@@ -7,3 +9,4 @@ typedef struct {
 #define bool char
 #define true 1
 #define false 0
+#endif
