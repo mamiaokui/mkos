@@ -34,6 +34,17 @@ typedef struct  {
     void* m_vram;
 } BootInfo;
 
+typedef struct {
+    short limit_low, base_low;
+    char base_mid, access_right;
+    char limit_high, base_high;
+} SegementDescriptionItem;
+
+typedef struct {
+    short offset_low, selector;
+    char dw_count, access_right;
+    short offset_height;
+} InteruptionDescriptionItem;
 
 
 
@@ -49,6 +60,7 @@ void initScreen(char *vram, int width, int height);
 void initMouseCursor(char *mouseBuffer256, char backgroundColor);
 void paintBlock(char *vram, int screenWidth, int blockWidth,
 	int blockHeight, int paintPositionX, int paintPositionY, char *imageData);
+void initGdtIdt();
 
 
 #define bool char
@@ -303,4 +315,8 @@ void paintBlock(char *vram, int screenWidth, int blockWidth,
         {
             vram[paintPositionY * screenWidth + paintPositionX + x * screenWidth + y] = imageData[x * blockWidth + y];
         }
+}
+
+void initGdtIdt()
+{
 }

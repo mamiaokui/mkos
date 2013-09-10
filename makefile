@@ -24,6 +24,7 @@ BootProgramLink.o: AsmFunction.o BootProgram.o BootProgramStart.o FontData.o
 
 OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
 	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img
+	@bash check.sh
 
 all: OS.img makefile
 	@ls -l OS.img	

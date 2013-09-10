@@ -17,6 +17,10 @@ SCRNX	equ		0x0ff4
 SCRNY	equ		0x0ff8		
 VRAM	equ		0x0ffc
 
+GDT     equ     0x10000
+IDT     equ     0x20000
+        
+
 
 ;;; IPL_POS	    equ		0x00100000	;for IPL
 ;;; ASMHEAD_POS	equ		0x00008200  ;for AsmHead
