@@ -10,8 +10,8 @@ RESB.o: RESB.asm
 BootProgram.o: BootProgram.c
 	gcc -c -O0 -m32 -fno-stack-protector BootProgram.c -o BootProgram.o
 
-AsmFunction.o: AsmFunction.asm
-	nasm -f elf  AsmFunction.asm -o AsmFunction.o
+AsmPack.o: AsmPack.asm
+	nasm -f elf  AsmPack.asm -o AsmPack.o
 
 FontData.o: FontData.asm
 	nasm  -f elf FontData.asm -o FontData.o
@@ -28,8 +28,8 @@ Utils.o: Utils.h Utils.c
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmFunction.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o
-	ld -m elf_i386 -Ttext 0x00280000  BootProgramStart.o BootProgram.o AsmFunction.o FontData.o GdtIdt.o PaintPack.o Utils.o -o BootProgramLink.o
+BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o
+	ld -m elf_i386 -Ttext 0x00280000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
 	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img
