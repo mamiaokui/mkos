@@ -18,10 +18,10 @@ SCRNY	equ		0x0ff8
 VRAM	equ		0x0ffc
 
 
-IPL_POS	    equ		0x00100000	;for IPL
-ASMHEAD_POS	equ		0x00008200  ;for AsmHead
-BOOTPROGRAM_POS	equ		0x00110000	;for BootProgram
-BOOTPROGRAM_POS_RELLOC	equ		0x00280000	;for BootProgram
+;;; IPL_POS	    equ		0x00100000	;for IPL
+;;; ASMHEAD_POS	equ		0x00008200  ;for AsmHead
+BOOTPROGRAM_POS	        equ		0x00100000	;for BootProgram
+BOOTPROGRAM_POS_RELLOC	equ		0x00200000	;for BootProgram
         
 
 
@@ -51,9 +51,9 @@ SelectorVideo		equ	LABEL_DESC_VIDEO	- LABEL_GDT    ;数据段选择子
 [BITS	16]
 memcpy16:
 		mov		eax,[esi]
-		inc		esi
+		add		esi, 4
 		mov		[edi],eax
-		inc		edi
+		add		edi, 4
 		sub		ecx,1
 		JNZ		memcpy16		
 		ret
@@ -73,18 +73,17 @@ LABEL_BEGIN:
 		OUT		0xa1,AL
 
 ; for ipl
-
-		mov		esi,0x7c00	
-		mov		edi,IPL_POS	
-		mov		ecx,512
-		CALL	memcpy16
+;;; 		mov		esi,0x7c00	
+;;; 		mov		edi,IPL_POS
+;;; 		mov		ecx,512/4
+;;; 		CALL	memcpy16
 
 
 ; for asmhead
-		mov		esi,ASMHEAD_POS
-		mov		edi,IPL_POS+512
-		mov		ecx,(bootprogram-0x8200)
-		CALL	memcpy16
+;;; 		mov		esi,ASMHEAD_POS
+;;; 		mov		edi,IPL_POS+512
+;;; 		mov		ecx,(bootprogram-0x8200)/4
+;;; 		CALL	memcpy16
 
 
 ; for bootprogram
@@ -92,7 +91,7 @@ LABEL_BEGIN:
 		mov		ebx, bootprogram
         mov     esi, ebx
         mov     edi, BOOTPROGRAM_POS
-        mov     ecx, 1024*1024*5
+        mov     ecx, 1024*1024*5/4
         CALL    memcpy16
 
 
