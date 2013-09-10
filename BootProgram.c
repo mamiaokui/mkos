@@ -5,6 +5,7 @@ extern void asmOut8(int port, int data);
 extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
+extern void asmLoadGDTR(int size, int address);
 extern char globalString;
 extern char globalFont;
 
@@ -27,24 +28,26 @@ extern char globalFont;
 
 #define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
 
-typedef struct  {
-    int m_vmode;
-    int m_screenWidth;
-    int m_screenHeight;
-    void* m_vram;
-} BootInfo;
-
 typedef struct {
     short limit_low, base_low;
     char base_mid, access_right;
     char limit_high, base_high;
-} SegementDescriptionItem;
+} SegmentDescriptionItem;
 
 typedef struct {
     short offset_low, selector;
     char dw_count, access_right;
     short offset_height;
 } InteruptionDescriptionItem;
+
+
+typedef struct {
+    int m_vmode;
+    int m_screenWidth;
+    int m_screenHeight;
+    void* m_vram;
+} BootInfo;
+
 
 
 
@@ -61,6 +64,7 @@ void initMouseCursor(char *mouseBuffer256, char backgroundColor);
 void paintBlock(char *vram, int screenWidth, int blockWidth,
 	int blockHeight, int paintPositionX, int paintPositionY, char *imageData);
 void initGdtIdt();
+void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight);
 
 
 #define bool char
@@ -76,7 +80,7 @@ void MKOSMain(void)
     int screenWidth = bootInfo->m_screenWidth;
     int screenHeight = bootInfo->m_screenHeight;
     char* vram = (char*)bootInfo->m_vram;
-
+    initGdtIdt();
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[10];
@@ -317,6 +321,32 @@ void paintBlock(char *vram, int screenWidth, int blockWidth,
         }
 }
 
+void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
+{
+	if (segmentSize > 0xfffff) {
+		acessRight |= 0x8000; /* G_bit = 1 */
+		segmentSize /= 0x1000;
+	}
+	gdti->limit_low    = segmentSize & 0xffff;
+	gdti->base_low     = base & 0xffff;
+	gdti->base_mid     = (base >> 16) & 0xff;
+	gdti->access_right = acessRight & 0xff;
+	gdti->limit_high   = ((segmentSize >> 16) & 0x0f) | ((acessRight >> 8) & 0xf0);
+	gdti->base_high    = (base >> 24) & 0xff;
+	return;
+}
+
 void initGdtIdt()
 {
+	SegmentDescriptionItem* gdt = (SegmentDescriptionItem*) 0x10000;
+	struct InteruptionDescriptionItem* idt = (struct InteruptionDescriptionItem*) 0x0020000;
+	int i;
+    //forget the small three bits
+	for (i = 0; i < (1<<13); i++) {
+		setGDTI(gdt + i, 0, 0, 0);
+	}
+	setGDTI(gdt + 1, 0xffffffff, 0x00000000, 0x4092);
+    setGDTI(gdt + 2, 0x0007ffff, 0x00280000, 0x409a);
+	asmLoadGDTR(0xffff, 0x00270000);
+	return;
 }

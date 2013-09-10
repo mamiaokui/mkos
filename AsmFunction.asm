@@ -9,8 +9,8 @@
         GLOBAL  asmLoadEflags
         GLOBAL  asmStoreEflags
         GLOBAL  asmLog
+        GLOBAL  asmLoadGDTR
         GLOBAL  globalString
-
 
 
 
@@ -52,6 +52,13 @@ asmLog: ;void asmStoreEflags(int eflags);
         MOV		EAX, [ESP+4]
         MOV [0x8888], EAX
         jmp LBhlt
+
+asmLoadGDTR:
+        MOV		AX,[ESP+4]		
+		MOV		[ESP+6],AX
+		LGDT	[ESP+6]
+		RET
+
         
 LBhlt:  hlt
         jmp LBhlt
