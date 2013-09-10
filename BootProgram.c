@@ -1,77 +1,8 @@
-extern void asmHlt(void);
-extern void asmWriteMemory8(int address, int value);
-extern void asmCli(void);
-extern void asmOut8(int port, int data);
-extern int asmLoadEflags(void);
-extern void asmStoreEflags(int eflags);
-extern void asmLog(int value);
-extern void asmLoadGDTR(int size, int address);
-extern void asmLoadIDTR(int size, int address);
-extern char globalString;
-extern char globalFont;
-
-#define COL000000		0
-#define COLFF0000		1
-#define COL00FF00		2
-#define COLFFFF00		3
-#define COL0000FF		4
-#define COLFF00FF		5
-#define COL00FFFF		6
-#define COLFFFFFF		7
-#define COLC6C6C6		8
-#define COL840000		9
-#define COL008400		10
-#define COL848400		11
-#define COL000084		12
-#define COL840084		13
-#define COL008484		14
-#define COL848484		15
-
-#define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
-
-typedef struct {
-    int m_vmode;
-    int m_screenWidth;
-    int m_screenHeight;
-    void* m_vram;
-} BootInfo;
-
-typedef struct {
-    short limit_low, base_low;
-    char base_mid, access_right;
-    char limit_high, base_high;
-} SegmentDescriptionItem;
-
-typedef struct {
-    short offset_low, selector;
-    char dw_count, access_right;
-    short offset_high;
-} InteruptionDescriptionItem;
-
-void initPalette(void);
-void setPalette(int start, int end, unsigned char *rgb);
-void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1);
-void printFont(char *vram, int xsize, int x, int y, char c, char character);
-void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
-void intToCharArray(char* dest, int number);
-void stringcat(char* begin, char* end, char* result);
-void initScreen(char *vram, int width, int height);
-
-//the mouse cursor size is 16*16
-void initMouseCursor(char *mouseBuffer256, char backgroundColor);
-void paintBlock(char *vram, int screenWidth, int blockWidth,
-                int blockHeight, int paintPositionX, int paintPositionY, char *imageData);
-void initGdtIdt();
-
-//set Global Segment Description Table Item
-void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight);
-void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int accessRight);
-
-
-#define bool char
-#define true 1
-#define false 0
-
+#include "AsmPack.h"
+#include "PaintPack.h"
+#include "GdtIdt.h"
+#include "Platform.h"
+#include "Utils.h"
 
 void MKOSMain(void)
 {
@@ -105,26 +36,6 @@ void MKOSMain(void)
     while (true)
         asmHlt();
 }
-
-	unsigned char table_rgb[16 * 3] = {
-		0x00, 0x00, 0x00, // black
-		0xff, 0x00, 0x00, // bright red
-		0x00, 0xff, 0x00, // bright green
-		0xff, 0xff, 0x00, // bright yellow
-		0x00, 0x00, 0xff, // bright blue
-		0xff, 0x00, 0xff, // bright purple
-		0x00, 0xff, 0xff, // light blue
-		0xff, 0xff, 0xff, // white
-		0xc6, 0xc6, 0xc6, // bright gray
-		0x84, 0x00, 0x00, // dark red
-		0x00, 0x84, 0x00, // dark green
-		0x84, 0x84, 0x00, // dark yellow
-		0x00, 0x00, 0x84, // dark blue
-		0x84, 0x00, 0x84, // dark purple
-		0x00, 0x84, 0x84, // light dark blue
-		0x84, 0x84, 0x84 // dark gray
-	};
-
 
 void initPalette(void)
 {
@@ -160,7 +71,7 @@ void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int
 
 void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
 {
-    char* fontBase = (char*)(&globalFont); //font data in memory
+    char* fontBase = (char*)(&asmGlobalFont); //font data in memory
 	int i;
 	char *vramPoint, line ;
     char* font = fontBase + ascii * 16; //every string cost 16 * sizeof(char)
