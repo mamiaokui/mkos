@@ -1,5 +1,4 @@
 #include "GdtIdt.h"
-#include "AsmPack.h"
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
 {
 	if (segmentSize > 0xfffff) {
