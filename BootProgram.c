@@ -6,6 +6,7 @@ extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
 extern void asmLoadGDTR(int size, int address);
+extern void asmLoadIDTR(int size, int address);
 extern char globalString;
 extern char globalFont;
 
@@ -29,6 +30,13 @@ extern char globalFont;
 #define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
 
 typedef struct {
+    int m_vmode;
+    int m_screenWidth;
+    int m_screenHeight;
+    void* m_vram;
+} BootInfo;
+
+typedef struct {
     short limit_low, base_low;
     char base_mid, access_right;
     char limit_high, base_high;
@@ -37,19 +45,8 @@ typedef struct {
 typedef struct {
     short offset_low, selector;
     char dw_count, access_right;
-    short offset_height;
+    short offset_high;
 } InteruptionDescriptionItem;
-
-
-typedef struct {
-    int m_vmode;
-    int m_screenWidth;
-    int m_screenHeight;
-    void* m_vram;
-} BootInfo;
-
-
-
 
 void initPalette(void);
 void setPalette(int start, int end, unsigned char *rgb);
@@ -59,12 +56,16 @@ void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
 void intToCharArray(char* dest, int number);
 void stringcat(char* begin, char* end, char* result);
 void initScreen(char *vram, int width, int height);
+
 //the mouse cursor size is 16*16
 void initMouseCursor(char *mouseBuffer256, char backgroundColor);
 void paintBlock(char *vram, int screenWidth, int blockWidth,
-	int blockHeight, int paintPositionX, int paintPositionY, char *imageData);
+                int blockHeight, int paintPositionX, int paintPositionY, char *imageData);
 void initGdtIdt();
+
+//set Global Segment Description Table Item
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight);
+void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int accessRight);
 
 
 #define bool char
@@ -336,17 +337,31 @@ void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, i
 	return;
 }
 
+void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int accessRight)
+{
+    idti->offset_low   = offset & 0xffff;
+	idti->selector     = selector;
+	idti->dw_count     = (accessRight >> 8) & 0xff;
+	idti->access_right = accessRight & 0xff;
+	idti->offset_high  = (offset >> 16) & 0xffff;
+}
+
 void initGdtIdt()
 {
 	SegmentDescriptionItem* gdt = (SegmentDescriptionItem*) 0x10000;
-	struct InteruptionDescriptionItem* idt = (struct InteruptionDescriptionItem*) 0x0020000;
+	InteruptionDescriptionItem* idt = (InteruptionDescriptionItem*) 0x0020000;
 	int i;
     //forget the small three bits
 	for (i = 0; i < (1<<13); i++) {
 		setGDTI(gdt + i, 0, 0, 0);
 	}
 	setGDTI(gdt + 1, 0xffffffff, 0x00000000, 0x4092);
-    setGDTI(gdt + 2, 0x0007ffff, 0x00280000, 0x409a);
-	asmLoadGDTR(0xffff, 0x00270000);
+    setGDTI(gdt + 2, 0x00100000, 0x00280000, 0x409a);
+	asmLoadGDTR(0xffff, 0x0010000);
+
+	for (i = 0; i < 256; i++) {
+		setIDTI(idt + i, 0, 0, 0);
+	}
+	asmLoadIDTR(0x7ff, 0x20000);
 	return;
 }

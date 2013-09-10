@@ -10,6 +10,7 @@
         GLOBAL  asmStoreEflags
         GLOBAL  asmLog
         GLOBAL  asmLoadGDTR
+        GLOBAL  asmLoadIDTR
         GLOBAL  globalString
 
 
@@ -58,6 +59,13 @@ asmLoadGDTR:
 		MOV		[ESP+6],AX
 		LGDT	[ESP+6]
 		RET
+
+asmLoadIDTR:
+        MOV		AX,[ESP+4]
+		MOV		[ESP+6],AX
+		LIDT	[ESP+6]
+		RET
+
 
         
 LBhlt:  hlt
