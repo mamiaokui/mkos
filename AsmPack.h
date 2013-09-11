@@ -11,5 +11,5 @@ extern void asmLoadGDTR(int size, int address);
 extern void asmLoadIDTR(int size, int address);
 extern char asmGlobalFont;
 
-#define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
+
 #endif

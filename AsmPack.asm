@@ -11,7 +11,9 @@
         GLOBAL  asmLog
         GLOBAL  asmLoadGDTR
         GLOBAL  asmLoadIDTR
+        GLOBAL  asmInt21Handler
         GLOBAL  globalString
+        EXTERN  int21Handler
 
 
 
@@ -71,6 +73,23 @@ asmLoadIDTR:
 LBhlt:  hlt
         jmp LBhlt
 		RET
+
+asmInt21Handler:
+        PUSH	ES
+		PUSH	DS
+		PUSHAD
+		MOV		EAX,ESP
+		PUSH	EAX
+		MOV		AX,SS
+		MOV		DS,AX
+		MOV		ES,AX
+		CALL	int21Handler
+		POP		EAX
+		POPAD
+		POP		DS
+		POP		ES
+		IRETD
+
         
 
 [SECTION .data]

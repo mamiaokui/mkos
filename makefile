@@ -25,11 +25,14 @@ PaintPack.o: PaintPack.h PaintPack.c
 Utils.o: Utils.h Utils.c
 	gcc -c -O0 -m32 -fno-stack-protector Utils.c -o Utils.o
 
+Platform.o: Platform.h Platform.c
+	gcc -c -O0 -m32 -fno-stack-protector Platform.c -o Platform.o
+
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o
-	ld -m elf_i386 -Ttext 0x00280000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o -o BootProgramLink.o
+BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o
+	ld -m elf_i386 -Ttext 0x00280000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
 	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img

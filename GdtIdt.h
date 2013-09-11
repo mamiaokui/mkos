@@ -16,4 +16,7 @@ void initGdtIdt();
 //set Global Segment Description Table Item
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight);
 void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int accessRight);
+
+void int21Handler(int arg);
+void asmInt21Handler(void);
 #endif

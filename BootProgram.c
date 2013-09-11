@@ -13,6 +13,7 @@ void MKOSMain(void)
     int screenHeight = bootInfo->m_screenHeight;
     char* vram = (char*)bootInfo->m_vram;
     initGdtIdt();
+    initPic();
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[10];

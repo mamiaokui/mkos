@@ -1,4 +1,6 @@
 #include "GdtIdt.h"
+#include "Platform.h"
+#include "PaintPack.h"
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
 {
 	if (segmentSize > 0xfffff) {
@@ -39,6 +41,19 @@ void initGdtIdt()
 	for (i = 0; i < 256; i++) {
 		setIDTI(idt + i, 0, 0, 0);
 	}
+    setIDTI(idt + 0x21, (int) asmInt21Handler, 2 * 8, AR_INTGATE32);
 	asmLoadIDTR(0x7ff, 0x20000);
 	return;
+}
+
+void int21Handler(int arg)
+{
+
+    BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
+    paintBlock(bootInfo->m_vram, bootInfo->m_screenWidth, COL000000, 0, 0, 32 * 8 - 1, 15);
+    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:21 IRQ:1  keyboard");
+	for (;;) {
+        asmHlt();
+	}
+
 }
