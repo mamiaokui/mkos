@@ -7,13 +7,13 @@
 void MKOSMain(void)
 {
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-    int *temp = (int*)(BOOTINFO_ADDRESS);;
 
     int screenWidth = bootInfo->m_screenWidth;
     int screenHeight = bootInfo->m_screenHeight;
     char* vram = (char*)bootInfo->m_vram;
     initGdtIdt();
     initPic();
+	asmSti(); 
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[10];

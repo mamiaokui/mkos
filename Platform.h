@@ -11,5 +11,10 @@ typedef struct {
 #define true 1
 #define false 0
 
+#define AR_DATA32_RW	0x4092
+#define AR_CODE32_ER	0x409a
+#define AR_INTGATE32	0x008e
+
+
 void initPic();
 #endif

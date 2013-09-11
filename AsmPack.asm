@@ -13,7 +13,9 @@
         GLOBAL  asmLoadIDTR
         GLOBAL  asmInt21Handler
         GLOBAL  globalString
+        GLOBAL  asmSti
         EXTERN  int21Handler
+        EXTERN  logByDraw
 
 
 
@@ -68,7 +70,6 @@ asmLoadIDTR:
 		LIDT	[ESP+6]
 		RET
 
-
         
 LBhlt:  hlt
         jmp LBhlt
@@ -90,7 +91,10 @@ asmInt21Handler:
 		POP		ES
 		IRETD
 
-        
+asmSti:
+		STI
+		RET
+
 
 [SECTION .data]
 globalString:

@@ -9,6 +9,7 @@ extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
 extern void asmLoadGDTR(int size, int address);
 extern void asmLoadIDTR(int size, int address);
+extern void asmSti();
 extern char asmGlobalFont;
 
 
