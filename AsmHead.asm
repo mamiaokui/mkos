@@ -36,10 +36,11 @@ org	0x8200
 
 [SECTION .gdt]
 
-;                                  段基址,            段界限,              属性
-LABEL_GDT:	    	Descriptor	       0,                0,                0   	; 空描述符
-LABEL_DESC_CODE32:	Descriptor	       0,       0x10000000,     DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
-LABEL_DESC_VIDEO:	Descriptor	 0xa0000,       320*200 -1,           DA_DRW	; 显存首地址
+;                                  段基址,                     段界限,              属性
+LABEL_GDT:	        	Descriptor	       0,                  0,                 0   	; 空描述符
+LABEL_DESC_CODE32:  	Descriptor	       0,         0x10000000,      DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
+LABEL_DESC_BOOTPROGRAM:	Descriptor	 BOOTPROGRAM_POS_RELLOC,     0x100000,      DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
+LABEL_DESC_VIDEO:   	Descriptor	 0xa0000,          320*200 -1,           DA_DRW	; 显存首地址
 ; GDT 结束
 
 GdtLen		equ	$ - LABEL_GDT	; GDT长度
@@ -48,6 +49,7 @@ GdtPtr		dw	GdtLen - 1	    ; GDT界限
 
 ; GDT 选择子
 SELECTOR_CODE_32		equ	LABEL_DESC_CODE32	- LABEL_GDT    ;代码段选择子
+SELECTOR_BOOTPROGRAM		equ	LABEL_DESC_BOOTPROGRAM	- LABEL_GDT    ;代码段选择子
 SelectorVideo		equ	LABEL_DESC_VIDEO	- LABEL_GDT    ;数据段选择子
 ; END of [SECTION .gdt]
 
@@ -138,7 +140,8 @@ LABEL_SEG_CODE32:
     mov esp, StackTop
     call RellocELF
 
-	jmp	BOOTPROGRAM_POS_RELLOC
+        ;; 	jmp	BOOTPROGRAM_POS_RELLOC
+    jmp 16:0
 
 ; 遍历每一个 Program Header，根据 Program Header 中的信息来确定把什么放进内存，放到什么位置，以及放多少。
 RellocELF:	
