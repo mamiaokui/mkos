@@ -37,7 +37,7 @@ void initGdtIdt()
 	}
 	setGDTI(gdt + 1, 0xffffffff, 0x00000000, 0x409a);
     setGDTI(gdt + 2, 0x00100000, 0x00280000, 0x409a);
-	asmLoadGDTR(0xffff, 0x0010000);
+	asmLoadGDTR(0xffff, gdt);
 
 	for (i = 0; i < 256; i++) {
 		setIDTI(idt + i, 0, 0, 0);
@@ -46,19 +46,24 @@ void initGdtIdt()
 	setIDTI(idt + 0x27, (int) asmInt27Handler, 1 * 8, AR_INTGATE32);
 	setIDTI(idt + 0x2c, (int) asmInt2cHandler, 1 * 8, AR_INTGATE32);
 
-	asmLoadIDTR(0x7ff, 0x20000);
+	asmLoadIDTR(0x7ff, idt);
 	return;
 }
 
+#define PORT_KEYBOARD		0x0060
+
 void int21Handler(int* arg)
 {
-
+    asmOut8(PIC0_OCW2, 0x61);
+    unsigned char data;
+	data = asmIn8(PORT_KEYBOARD);
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:21 IRQ:1  keyboard");
-	for (;;) {
-        asmHlt();
-	}
 
+    int intData = (int)data;
+    char b[10];
+    intToCharArray(b, intData);
+    initScreen(0xa0000, 320, 200);
+    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
 }
 
 void int27Handler(int* arg)

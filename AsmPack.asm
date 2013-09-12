@@ -6,6 +6,7 @@
         GLOBAL  asmWriteMemory8
         GLOBAL  asmCli
         GLOBAL  asmOut8
+        GLOBAL  asmIn8
         GLOBAL  asmLoadEflags
         GLOBAL  asmStoreEflags
         GLOBAL  asmLog
@@ -58,6 +59,12 @@ asmOut8: ;void asmOut8(int port, int data);
 		out		dx,al
         nop
         nop
+		RET
+
+asmIn8:        ; int asmIn8(int port);
+		MOV		EDX,[ESP+4]		; port
+		MOV		EAX,0
+		IN		AL,DX
 		RET
 
 asmLoadEflags: ;int asmLoadEflags(void);

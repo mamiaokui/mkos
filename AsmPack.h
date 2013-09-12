@@ -4,6 +4,7 @@ extern void asmHlt(void);
 extern void asmWriteMemory8(int address, int value);
 extern void asmCli(void);
 extern void asmOut8(int port, int data);
+extern void asmIn8(int port);
 extern int asmLoadEflags(void);
 extern void asmStoreEflags(int eflags);
 extern void asmLog(int value);
