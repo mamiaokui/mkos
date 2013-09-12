@@ -1,8 +1,8 @@
 #include "PaintPack.h"
 #include "AsmPack.h"
 #include "Platform.h"
+#include "Utils.h"
 
-void logByDraw();
 unsigned char table_rgb[16 * 3] = {
     0x00, 0x00, 0x00, // black
     0xff, 0x00, 0x00, // bright red
@@ -152,15 +152,3 @@ void paintBlock(char *vram, int screenWidth, int blockWidth,
         }
 }
 
-void logByDraw()
-{
-    BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-
-    int screenWidth = bootInfo->m_screenWidth;
-    int screenHeight = bootInfo->m_screenHeight;
-    char* vram = (char*)bootInfo->m_vram;
-
-    drawRect(vram, screenWidth, COLC6C6C6, 0, 0, screenWidth -  1, screenHeight - 1);
-    while(true)
-        ;
-}

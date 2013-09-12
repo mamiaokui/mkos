@@ -1,6 +1,7 @@
 #include "GdtIdt.h"
 #include "Platform.h"
 #include "PaintPack.h"
+#include "Utils.h"
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
 {
 	if (segmentSize > 0xfffff) {
@@ -42,6 +43,9 @@ void initGdtIdt()
 		setIDTI(idt + i, 0, 0, 0);
 	}
     setIDTI(idt + 0x21, (int) asmInt21Handler, 2 * 8, AR_INTGATE32);
+	setIDTI(idt + 0x27, (int) asmInt21Handler, 2 * 8, AR_INTGATE32);
+	setIDTI(idt + 0x2c, (int) asmInt21Handler, 2 * 8, AR_INTGATE32);
+
 	asmLoadIDTR(0x7ff, 0x20000);
 	return;
 }

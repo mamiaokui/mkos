@@ -6,6 +6,9 @@
 
 void MKOSMain(void)
 {
+    log1 = 0x98765;
+    startUpFinished = 0;
+
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
 
     int screenWidth = bootInfo->m_screenWidth;
@@ -32,8 +35,10 @@ void MKOSMain(void)
 
     initMouseCursor(mouseCursorImage, COL008484);
     paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
-    
 
+    
+    doLog();
+    startUpFinished = 1;
     while (true)
         asmHlt();
 }

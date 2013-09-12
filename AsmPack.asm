@@ -15,7 +15,19 @@
         GLOBAL  globalString
         GLOBAL  asmSti
         EXTERN  int21Handler
-        EXTERN  logByDraw
+        EXTERN  logInC
+        ;; logInC demo
+        ;;         push 123
+        ;;         push 456
+        ;;         push 789
+        ;;         push 135
+        ;;         call logInC
+        ;;         pop eax
+        ;;         pop eax
+        ;;         pop eax
+        ;;         pop eax
+        ;; will show 135, 789 in screen
+
 
 
 
@@ -38,7 +50,10 @@ asmCli: ;void asmCli(void);
 asmOut8: ;void asmOut8(int port, int data);
 		mov		dx,[esp+4]		; port
 		mov		al,[esp+8]		; data
+
 		out		dx,al
+        nop
+        nop
 		RET
 
 asmLoadEflags: ;int asmLoadEflags(void);
