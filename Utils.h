@@ -5,8 +5,8 @@ void stringcat(char* begin, char* end, char* result);
 void logInC();
 void doLog();
 extern int enableLog;
-extern int log1;
-extern int log2;
+extern int log_1;
+extern int log_2;
 extern int startUpFinished;
 
 #endif

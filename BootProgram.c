@@ -6,7 +6,7 @@
 
 void MKOSMain(void)
 {
-    log1 = 0x98765;
+    log_1 = 0x98765;
     startUpFinished = 0;
 
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
@@ -36,9 +36,13 @@ void MKOSMain(void)
     initMouseCursor(mouseCursorImage, COL008484);
     paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
 
+
     
     doLog();
     startUpFinished = 1;
+	asmOut8(PIC0_IMR, 0xf9); 
+	asmOut8(PIC1_IMR, 0xef); 
+
     while (true)
         asmHlt();
 }

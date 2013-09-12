@@ -2,8 +2,8 @@
 #include "Platform.h"
 #include "PaintPack.h"
 int enableLog;
-int log1;
-int log2;
+int log_1;
+int log_2;
 int startUpFinished;
 void intToCharArray(char* dest, int number)
 {
@@ -74,15 +74,15 @@ void logInC(int a ,int b)
 {
     if (enableLog == 0 && startUpFinished == 0)
         return;
-    log1 = a;
-    log2 = b;
+    log_1 = a;
+    log_2 = b;
     if (startUpFinished)
         doLog();
 }
 
 void doLog()
 {
-    if (log1 == 0x98765)
+    if (log_1 == 0x98765)
         return;
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
 
@@ -93,8 +93,8 @@ void doLog()
     char aValue[10];
     char bValue[10];
     char result[20];
-    intToCharArray(aValue, log1);
-    intToCharArray(bValue, log2);
+    intToCharArray(aValue, log_1);
+    intToCharArray(bValue, log_2);
     printString(vram, screenWidth, 8, 30, COL000000, aValue);    
     printString(vram, screenWidth, 8, 60, COL000000, bValue);    
 

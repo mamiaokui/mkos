@@ -50,12 +50,28 @@ void initGdtIdt()
 	return;
 }
 
-void int21Handler(int arg)
+void int21Handler(int* arg)
 {
 
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-    paintBlock(bootInfo->m_vram, bootInfo->m_screenWidth, COL000000, 0, 0, 32 * 8 - 1, 15);
     printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:21 IRQ:1  keyboard");
+	for (;;) {
+        asmHlt();
+	}
+
+}
+
+void int27Handler(int* arg)
+{
+	asmOut8(PIC0_OCW2, 0x67); 
+	return;
+}
+
+void int2cHandler(int* arg)
+{
+
+    BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
+    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:2c IRQ:12  mouse");
 	for (;;) {
         asmHlt();
 	}

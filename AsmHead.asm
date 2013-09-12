@@ -71,25 +71,6 @@ LABEL_BEGIN:
 		mov		WORD [SCRNY],200
 		mov		DWORD [VRAM],0x000a0000
 
-		mov		AL,0xff
-		OUT		0x21,AL
-		NOP					
-		OUT		0xa1,AL
-
-; for ipl
-;;; 		mov		esi,0x7c00	
-;;; 		mov		edi,IPL_POS
-;;; 		mov		ecx,512/4
-;;; 		CALL	memcpy16
-
-
-; for asmhead
-;;; 		mov		esi,ASMHEAD_POS
-;;; 		mov		edi,IPL_POS+512
-;;; 		mov		ecx,(bootprogram-0x8200)/4
-;;; 		CALL	memcpy16
-
-
 ; for bootprogram
 
 		mov		ebx, bootprogram
