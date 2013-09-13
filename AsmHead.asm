@@ -55,6 +55,16 @@ SelectorVideo		equ	LABEL_DESC_VIDEO	- LABEL_GDT    ;数据段选择子
 
 [SECTION .s16]
 [BITS	16]
+memset0:
+		mov		eax,0x0
+		mov		[edi],eax
+		add		edi, 4
+		sub		ecx,1
+		JNZ		memset0		
+		ret
+
+        
+        
 memcpy16:
 		mov		eax,[esi]
 		add		esi, 4
@@ -65,13 +75,25 @@ memcpy16:
 		ret
 
 LABEL_BEGIN:
-		mov		AL,0x13	
-		mov		AH,0x00
-		INT		0x10
 		mov		BYTE [VMODE],8
 		mov		WORD [SCRNX],320
 		mov		WORD [SCRNY],200
 		mov		DWORD [VRAM],0x000a0000
+        
+        mov edi, 0xa0000
+        mov ecx, 320*200/4
+        call memset0
+
+        
+        mov		AL,0x13	
+		mov		AH,0x00
+		INT		0x10
+
+        mov edi, 0xa0000
+        mov ecx, 320*200/4
+        call memset0
+
+
 
 ; for bootprogram
 
@@ -80,6 +102,7 @@ LABEL_BEGIN:
         mov     edi, BOOTPROGRAM_POS
         mov     ecx, 1024*1024*5/4
         CALL    memcpy16
+
 
 
 	mov	ax, cs
