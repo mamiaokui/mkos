@@ -26,6 +26,9 @@ extern "C" void MKOSMain(void)
     initGdtIdt();
     initPic();
 	asmSti(); 
+	asmOut8(PIC0_IMR, 0xf9); 
+	asmOut8(PIC1_IMR, 0xef); 
+	initKeyboard();
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[10];
@@ -46,11 +49,9 @@ extern "C" void MKOSMain(void)
     paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
 
 
-    
+    enableMouse();
     doLog();
     startUpFinished = 1;
-	asmOut8(PIC0_IMR, 0xf9); 
-	asmOut8(PIC1_IMR, 0xef); 
     while (true) {
 		asmCli();
 		if (globalInterruptionBuffer.isInterruptionBufferEmpty()) {

@@ -62,7 +62,6 @@ void int21Handler(int* arg)
     unsigned char data;
 	data = asmIn8(PORT_KEYBOARD);
 	globalInterruptionBuffer.inputInterruptionBuffer(data);
-    printFont((char*)0xa0000, 320, 8, 60, COL848484, 'c');
 }
 
 void int27Handler(int* arg)
@@ -73,11 +72,10 @@ void int27Handler(int* arg)
 
 void int2cHandler(int* arg)
 {
-
-    BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:2c IRQ:12  mouse");
-	for (;;) {
-        asmHlt();
-	}
-
+	unsigned char data;
+	asmOut8(PIC1_OCW2, 0x64);
+	asmOut8(PIC0_OCW2, 0x62);
+	data = asmIn8(PORT_KEYBOARD);
+	globalInterruptionBuffer.inputInterruptionBuffer(data);
+	return;
 }

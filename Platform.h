@@ -27,4 +27,7 @@ typedef struct {
 
 
 void initPic();
+void waitKeyboardReady(void);
+void initKeyboard(void);
+void enableMouse(void);
 #endif
