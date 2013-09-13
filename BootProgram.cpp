@@ -20,12 +20,12 @@ extern "C" void MKOSMain(void)
 
     int screenWidth = bootInfo->m_screenWidth;
     int screenHeight = bootInfo->m_screenHeight;
-    char* vram = (char*)bootInfo->m_vram;
+    char* vram = bootInfo->m_vram;
     unsigned char interruptionBufferData[128];
+    globalInterruptionBuffer.initInterruptionBuffer(128, interruptionBufferData);
     initGdtIdt();
     initPic();
 	asmSti(); 
-    globalInterruptionBuffer.initInterruptionBuffer(128, interruptionBufferData);
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[10];
@@ -51,19 +51,18 @@ extern "C" void MKOSMain(void)
     startUpFinished = 1;
 	asmOut8(PIC0_IMR, 0xf9); 
 	asmOut8(PIC1_IMR, 0xef); 
-
     while (true) {
 		asmCli();
 		if (globalInterruptionBuffer.isInterruptionBufferEmpty()) {
 			asmStiHlt();
 		} else {
-			char data = globalInterruptionBuffer.getInterruptionBuffer();
+			unsigned char data = globalInterruptionBuffer.getInterruptionBuffer();
 			asmSti();
             int intData = (int)data;
             char b[10];
             intToCharArray(b, intData);
-            initScreen((char*)bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
-            printString((char*)bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+            initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
+            printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
 		}
     }
 }

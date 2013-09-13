@@ -5,7 +5,7 @@
 #include "Utils.h"
 #include "InterruptionBuffer.h"
 
-class InterruptionBuffer globalInterruptionBuffer;
+InterruptionBuffer globalInterruptionBuffer;
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
 {
 	if (segmentSize > 0xfffff) {
@@ -61,13 +61,8 @@ void int21Handler(int* arg)
     asmOut8(PIC0_OCW2, 0x61);
     unsigned char data;
 	data = asmIn8(PORT_KEYBOARD);
-    BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-
-    int intData = (int)data;
-    char b[10];
-    intToCharArray(b, intData);
-    initScreen((char*)0xa0000, 320, 200);
-    printString((char*)bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+	globalInterruptionBuffer.inputInterruptionBuffer(data);
+    printFont((char*)0xa0000, 320, 8, 60, COL848484, 'c');
 }
 
 void int27Handler(int* arg)
@@ -80,7 +75,7 @@ void int2cHandler(int* arg)
 {
 
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-    printString((char*)bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:2c IRQ:12  mouse");
+    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:2c IRQ:12  mouse");
 	for (;;) {
         asmHlt();
 	}

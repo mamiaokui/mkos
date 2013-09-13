@@ -5,11 +5,8 @@ typedef struct {
     int m_vmode;
     int m_screenWidth;
     int m_screenHeight;
-    void* m_vram;
+    char* m_vram;
 } BootInfo;
-#define bool char
-#define true 1
-#define false 0
 
 #define AR_DATA32_RW	0x4092
 #define AR_CODE32_ER	0x409a

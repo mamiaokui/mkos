@@ -49,5 +49,5 @@ unsigned char InterruptionBuffer::getInterruptionBuffer()
 }
 bool InterruptionBuffer::isInterruptionBufferEmpty()
 {
-    return this->m_free == this->m_free;
+    return this->m_free == this->m_size;
 }
