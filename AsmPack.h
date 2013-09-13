@@ -1,17 +1,18 @@
 #ifndef ASMPACK_H
 #define ASMPACK_H
-extern void asmHlt(void);
-extern void asmWriteMemory8(int address, int value);
-extern void asmCli(void);
-extern void asmOut8(int port, int data);
-extern void asmIn8(int port);
-extern int asmLoadEflags(void);
-extern void asmStoreEflags(int eflags);
-extern void asmLog(int value);
-extern void asmLoadGDTR(int size, int address);
-extern void asmLoadIDTR(int size, int address);
-extern void asmSti();
-extern char asmGlobalFont;
+extern "C" void asmHlt(void);
+extern "C" void asmWriteMemory8(int address, int value);
+extern "C" void asmCli(void);
+extern "C" void asmStiHlt(void);
+extern "C" void asmOut8(int port, int data);
+extern "C" unsigned char asmIn8(int port);
+extern "C" int asmLoadEflags(void);
+extern "C" void asmStoreEflags(int eflags);
+extern "C" void asmLog(int value);
+extern "C" void asmLoadGDTR(int size, int address);
+extern "C" void asmLoadIDTR(int size, int address);
+extern "C" void asmSti();
+extern "C" char asmGlobalFont;
 
 
 #endif

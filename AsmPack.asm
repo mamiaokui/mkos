@@ -5,6 +5,7 @@
 		GLOBAL	asmHlt	
         GLOBAL  asmWriteMemory8
         GLOBAL  asmCli
+        GLOBAL  asmStiHlt
         GLOBAL  asmOut8
         GLOBAL  asmIn8
         GLOBAL  asmLoadEflags
@@ -51,6 +52,12 @@ asmWriteMemory8: ;void asmWriteMemory8(int, int);
 asmCli: ;void asmCli(void);
 		CLI
 		RET
+
+asmStiHlt:
+        STI
+		HLT
+		RET
+
 
 asmOut8: ;void asmOut8(int port, int data);
 		mov		dx,[esp+4]		; port

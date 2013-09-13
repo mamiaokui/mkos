@@ -17,13 +17,13 @@ void initGdtIdt();
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight);
 void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int accessRight);
 
-void int21Handler(int* arg);
-void asmInt21Handler(void);
+extern "C" void int21Handler(int* arg);
+extern "C" void asmInt21Handler(void);
 
-void int27Handler(int* arg);
-void asmInt27Handler(void);
+extern "C" void int27Handler(int* arg);
+extern "C" void asmInt27Handler(void);
 
-void int2cHandler(int* arg);
-void asmInt2cHandler(void);
+extern "C" void int2cHandler(int* arg);
+extern "C" void asmInt2cHandler(void);
 
 #endif

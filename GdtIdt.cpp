@@ -1,7 +1,11 @@
+#include "AsmPack.h"
 #include "GdtIdt.h"
 #include "Platform.h"
 #include "PaintPack.h"
 #include "Utils.h"
+#include "InterruptionBuffer.h"
+
+struct InterruptionBuffer globalInterruptionBuffer;
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
 {
 	if (segmentSize > 0xfffff) {
@@ -37,7 +41,7 @@ void initGdtIdt()
 	}
 	setGDTI(gdt + 1, 0xffffffff, 0x00000000, 0x409a);
     setGDTI(gdt + 2, 0x00100000, 0x00200000, 0x409a);
-	asmLoadGDTR(0xffff, gdt);
+	asmLoadGDTR(0xffff, (int)gdt);
 
 	for (i = 0; i < 256; i++) {
 		setIDTI(idt + i, 0, 0, 0);
@@ -46,7 +50,7 @@ void initGdtIdt()
 	setIDTI(idt + 0x27, (int) asmInt27Handler-0x200000, 2 * 8, AR_INTGATE32);
 	setIDTI(idt + 0x2c, (int) asmInt2cHandler-0x200000, 2 * 8, AR_INTGATE32);
 
-	asmLoadIDTR(0x7ff, idt);
+	asmLoadIDTR(0x7ff, (int)idt);
 	return;
 }
 
@@ -63,7 +67,7 @@ void int21Handler(int* arg)
     char b[10];
     intToCharArray(b, intData);
     initScreen((char*)0xa0000, 320, 200);
-    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+    printString((char*)bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
 }
 
 void int27Handler(int* arg)
@@ -76,7 +80,7 @@ void int2cHandler(int* arg)
 {
 
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:2c IRQ:12  mouse");
+    printString((char*)bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, "INT:2c IRQ:12  mouse");
 	for (;;) {
         asmHlt();
 	}

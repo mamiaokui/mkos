@@ -50,7 +50,7 @@ void intToCharArray(char* dest, int number)
 
 }
 
-void stringcat(char* begin, char* end, char* result)
+void stringcat(const char* begin, const char* end, char* result)
 {
     int beginIndex = 0;
     int resultIndex = 0;

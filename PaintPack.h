@@ -18,13 +18,13 @@
 #define COL848484		15
 extern unsigned char table_rgb[16 * 3];
 void initPalette(void);
-void setPalette(int start, int end, unsigned char *rgb);
-void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1);
+void setPalette(int start, int end, const unsigned char *rgb);
+void drawRect(char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1);
 void printFont(char *vram, int xsize, int x, int y, char c, char character);
-void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s);
+void printString(char *vram, int xsize, int x, int y, char c, const char *s);
 void initScreen(char *vram, int width, int height);
 void paintBlock(char *vram, int screenWidth, int blockWidth,
-                int blockHeight, int paintPositionX, int paintPositionY, char *imageData);
+                int blockHeight, int paintPositionX, int paintPositionY, const char *imageData);
 //the mouse cursor size is 16*16
 void initMouseCursor(char *mouseBuffer256, char backgroundColor);
 

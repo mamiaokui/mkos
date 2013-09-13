@@ -28,7 +28,7 @@ void initPalette(void)
 	return;
 }
 
-void setPalette(int start, int end, unsigned char *rgb)
+void setPalette(int start, int end, const unsigned char *rgb)
 {
 	int i, eflags;
 	eflags = asmLoadEflags();
@@ -44,7 +44,7 @@ void setPalette(int start, int end, unsigned char *rgb)
 	return;
 }
 
-void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1)
+void drawRect(char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1)
 {
 	int x, y;
 	for (y = y0; y <= y1; y++) {
@@ -73,7 +73,7 @@ void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
 
 
 
-void printString(char *vram, int xsize, int x, int y, char c, unsigned char *s)
+void printString(char *vram, int xsize, int x, int y, char c, const char *s)
 {
     for(; *s != '\0'; s++) {
         printFont(vram, xsize, x, y, c, s[0]);
@@ -104,7 +104,7 @@ void initScreen(char *vram, int screenWidth, int screenHeight)
 
 void initMouseCursor(char *mouseBuffer256, char backgroundColor)
 {
-    static char cursor[16][16] = {
+    static char cursor[16][17] = {
 		"**************..",
 		"*OOOOOOOOOOO*...",
 		"*OOOOOOOOOO*....",
@@ -142,7 +142,7 @@ void initMouseCursor(char *mouseBuffer256, char backgroundColor)
 }
 
 void paintBlock(char *vram, int screenWidth, int blockWidth,
-	int blockHeight, int paintPositionX, int paintPositionY, char *imageData)
+	int blockHeight, int paintPositionX, int paintPositionY, const char *imageData)
 {
     int x, y;
     for (x = 0; x < blockHeight; x++)

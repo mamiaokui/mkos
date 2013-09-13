@@ -5,9 +5,13 @@
 #include "Utils.h"
 #include "InterruptionBuffer.h"
 
+//change from c to cpp, ld link error because can't find the implement.
+void * __gxx_personality_v0=0;
+void * _Unwind_Resume =0;
+
 extern InterruptionBuffer globalInterruptionBuffer;
 
-void MKOSMain(void)
+extern "C" void MKOSMain(void)
 {
     log_1 = 0x98765;
     startUpFinished = 0;
@@ -17,7 +21,7 @@ void MKOSMain(void)
     int screenWidth = bootInfo->m_screenWidth;
     int screenHeight = bootInfo->m_screenHeight;
     char* vram = (char*)bootInfo->m_vram;
-    char interruptionBufferData[128];
+    unsigned char interruptionBufferData[128];
     initGdtIdt();
     initPic();
 	asmSti(); 
@@ -28,7 +32,7 @@ void MKOSMain(void)
 
     intToCharArray(charScreenWidth, screenWidth);
 
-    char* screenWidthStr = "Screen Width = ";
+    const char* screenWidthStr = "Screen Width = ";
     char result[30];
     stringcat(screenWidthStr, charScreenWidth, result);
 
@@ -50,16 +54,16 @@ void MKOSMain(void)
 
     while (true) {
 		asmCli();
-		if (isInterruptionBufferEmpty(&globalInterruptionBuffer)) {
+		if (globalInterruptionBuffer.isInterruptionBufferEmpty()) {
 			asmStiHlt();
 		} else {
-			char data = getInterruptionBuffer(&globalInterruptionBuffer);
+			char data = globalInterruptionBuffer.getInterruptionBuffer();
 			asmSti();
             int intData = (int)data;
             char b[10];
             intToCharArray(b, intData);
-            initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
-            printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+            initScreen((char*)bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
+            printString((char*)bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
 		}
     }
 }
