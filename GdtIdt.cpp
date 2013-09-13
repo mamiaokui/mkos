@@ -5,7 +5,7 @@
 #include "Utils.h"
 #include "InterruptionBuffer.h"
 
-struct InterruptionBuffer globalInterruptionBuffer;
+class InterruptionBuffer globalInterruptionBuffer;
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
 {
 	if (segmentSize > 0xfffff) {
