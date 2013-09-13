@@ -62,7 +62,7 @@ void int21Handler(int* arg)
     int intData = (int)data;
     char b[10];
     intToCharArray(b, intData);
-    initScreen(0xa0000, 320, 200);
+    initScreen((char*)0xa0000, 320, 200);
     printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
 }
 
