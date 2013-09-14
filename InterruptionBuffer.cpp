@@ -1,6 +1,6 @@
 #include "InterruptionBuffer.h"
 
-void InterruptionBuffer::initInterruptionBuffer(int size, unsigned char* buffer)
+void InterruptionBuffer::initInterruptionBuffer(int size, int* buffer)
 {
     this->m_size = size;
     this->m_free = size;
@@ -12,7 +12,7 @@ void InterruptionBuffer::initInterruptionBuffer(int size, unsigned char* buffer)
 }
 
 
-void InterruptionBuffer::inputInterruptionBuffer(unsigned char data)
+void InterruptionBuffer::inputInterruptionBuffer(int data)
 {
     this->m_flags = 0;
     if (this->m_free == 0)
@@ -30,7 +30,7 @@ void InterruptionBuffer::inputInterruptionBuffer(unsigned char data)
     this->m_free--;
 }
 
-unsigned char InterruptionBuffer::getInterruptionBuffer()
+int InterruptionBuffer::getInterruptionBuffer()
 {
     this->m_flags = 0;
     if (this->m_free == this->m_size)
@@ -38,7 +38,7 @@ unsigned char InterruptionBuffer::getInterruptionBuffer()
         this->m_flags |= BUFFER_OVERFLOW;
         return 0;
     }
-    unsigned char data;
+    int data;
     data = this->m_buffer[this->m_nextRead];
     this->m_nextRead++;
     if (this->m_nextRead == this->m_size)

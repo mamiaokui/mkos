@@ -3,16 +3,16 @@
 
 class InterruptionBuffer{
 private:
-    unsigned char* m_buffer;
+    int* m_buffer;
     int m_nextRead;
     int m_nextWrite;
     int m_size;
     int m_free;
     int m_flags;
 public:
-    void initInterruptionBuffer(int size, unsigned char* buffer);
-    void inputInterruptionBuffer(unsigned char data);
-    unsigned char getInterruptionBuffer();
+    void initInterruptionBuffer(int size, int* buffer);
+    void inputInterruptionBuffer(int data);
+    int getInterruptionBuffer();
     bool isInterruptionBufferEmpty();
 } ;
 
