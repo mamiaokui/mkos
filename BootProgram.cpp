@@ -57,9 +57,8 @@ extern "C" void MKOSMain(void)
 		if (globalInterruptionBuffer.isInterruptionBufferEmpty()) {
 			asmStiHlt();
 		} else {
-			unsigned char data = globalInterruptionBuffer.getInterruptionBuffer();
+			int intData = globalInterruptionBuffer.getInterruptionBuffer();
 			asmSti();
-            int intData = (int)data;
             char b[10];
             intToCharArray(b, intData);
             initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);

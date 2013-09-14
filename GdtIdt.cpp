@@ -59,9 +59,10 @@ void initGdtIdt()
 void int21Handler(int* arg)
 {
     asmOut8(PIC0_OCW2, 0x61);
-    unsigned char data;
+    int data;
 	data = asmIn8(PORT_KEYBOARD);
-	globalInterruptionBuffer.inputInterruptionBuffer(data);
+    //use the same interruption buffer, so add one number to change the level.
+	globalInterruptionBuffer.inputInterruptionBuffer(data + 256);
 }
 
 void int27Handler(int* arg)
@@ -72,10 +73,11 @@ void int27Handler(int* arg)
 
 void int2cHandler(int* arg)
 {
-	unsigned char data;
+	int data;
 	asmOut8(PIC1_OCW2, 0x64);
 	asmOut8(PIC0_OCW2, 0x62);
 	data = asmIn8(PORT_KEYBOARD);
-	globalInterruptionBuffer.inputInterruptionBuffer(data);
+    //same as int21
+	globalInterruptionBuffer.inputInterruptionBuffer(data + 512);
 	return;
 }
