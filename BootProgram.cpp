@@ -11,6 +11,54 @@ void * _Unwind_Resume =0;
 
 extern InterruptionBuffer globalInterruptionBuffer;
 
+class MouseDataDecoder 
+{
+private:
+    int m_mouseState;
+    int m_mouseData[3];
+public:
+    MouseDataDecoder()
+    {
+        m_mouseState = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            m_mouseData[i] = 0;
+        }
+    }
+
+    bool receiveMouseInterruption(int data)
+    {
+        bool ok = false;
+        if (m_mouseState == 0)
+        {
+            if (data == 0xfa)
+                m_mouseState = 1;
+        }
+        else if (m_mouseState == 1)
+        {
+            m_mouseData[0] = data;
+            m_mouseState = 2;
+        }
+        else if (m_mouseState == 2)
+        {
+            m_mouseData[1] = data;
+            m_mouseState = 3;
+        }
+        else if (m_mouseState == 3)
+        {
+            m_mouseData[2] = data;
+            m_mouseState = 1;
+            ok = true;
+        }
+        return ok;
+    }
+
+    int* getMouseData()
+    {
+        return m_mouseData;
+    }
+};
+
 extern "C" void MKOSMain(void)
 {
     log_1 = 0x98765;
@@ -52,17 +100,46 @@ extern "C" void MKOSMain(void)
     enableMouse();
     doLog();
     startUpFinished = 1;
-    while (true) {
+    
+    MouseDataDecoder mouseDataDecoder;
+    while (true)
+    {
 		asmCli();
-		if (globalInterruptionBuffer.isInterruptionBufferEmpty()) {
+		if (globalInterruptionBuffer.isInterruptionBufferEmpty()) 
+        {
 			asmStiHlt();
-		} else {
+		} else 
+        {
 			int intData = globalInterruptionBuffer.getInterruptionBuffer();
 			asmSti();
-            char b[10];
-            intToCharArray(b, intData);
-            initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
-            printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+            if (intData < 512)
+            {
+                char b[10];
+                intToCharArray(b, intData);
+                initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
+                printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+            }
+            else if (intData >= 512)
+            {
+                bool output =  mouseDataDecoder.receiveMouseInterruption(intData - 512);
+                if (output)
+                {
+                    initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
+                    int* outputData = mouseDataDecoder.getMouseData();
+                    char b0[10];
+                    intToCharArray(b0, outputData[0]);
+                    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 30, COLFFFFFF, b0);
+
+                    char b1[10];
+                    intToCharArray(b1, outputData[1]);
+                    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 60, 30, COLFFFFFF, b1);
+
+                    char b2[10];
+                    intToCharArray(b2, outputData[2]);
+                    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 90, 30, COLFFFFFF, b2);
+
+                }
+            }
 		}
     }
 }
