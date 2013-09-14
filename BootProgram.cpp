@@ -145,17 +145,23 @@ extern "C" void MKOSMain(void)
                 {
                     initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
                     int* outputData = mouseDataDecoder.getMouseData();
-                    char b0[10];
-                    intToCharArray(b0, outputData[0]);
-                    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 30, COLFFFFFF, b0);
+                    mx += outputData[1];
+                    my += outputData[2];
+                    if (mx < 0)
+                    {
+                        mx = 0;
+                    }
+                    if (my < 0)
+                    {
+                        my = 0;
+                    }
+                    if (mx > screenWidth - 16)
+                        mx = screenWidth -16;
 
-                    char b1[10];
-                    intToCharArray(b1, outputData[1]);
-                    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 60, 30, COLFFFFFF, b1);
+                    if (my > screenWidth - 16)
+                        my = screenWidth -16;
 
-                    char b2[10];
-                    intToCharArray(b2, outputData[2]);
-                    printString(bootInfo->m_vram, bootInfo->m_screenWidth, 90, 30, COLFFFFFF, b2);
+                    paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
 
                 }
             }
