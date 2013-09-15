@@ -152,7 +152,7 @@ LABEL_BEGIN:
 
 [BITS	32]
 [SECTION .bss]
-StackSpace resb 2 * 1024
+StackSpace resb 30 * 1024 
 StackTop:		
         
 [SECTION .s32]; 32 位代码段. 由实模式跳入.

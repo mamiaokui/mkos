@@ -10,6 +10,8 @@
         GLOBAL  asmIn8
         GLOBAL  asmLoadEflags
         GLOBAL  asmStoreEflags
+        GLOBAL  asmLoadCr0
+        GLOBAL  asmStoreCr0
         GLOBAL  asmLog
         GLOBAL  asmLoadGDTR
         GLOBAL  asmLoadIDTR
@@ -83,6 +85,15 @@ asmStoreEflags: ;void asmStoreEflags(int eflags);
 		MOV		EAX,[ESP+4]
 		PUSH	EAX
 		POPFD		; POP EAX TO EFLAGS
+		RET
+
+asmLoadCr0: 
+        MOV EAX, CR0
+		RET
+
+asmStoreCr0: 
+		MOV		EAX,[ESP+4]
+        MOV     CR0, EAX
 		RET
 
 

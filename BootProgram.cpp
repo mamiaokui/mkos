@@ -4,6 +4,7 @@
 #include "Platform.h"
 #include "Utils.h"
 #include "InterruptionBuffer.h"
+#include "MemoryManager.h"
 
 //change from c to cpp, ld link error because can't find the implement.
 void * __gxx_personality_v0=0;
@@ -98,11 +99,12 @@ extern "C" void MKOSMain(void)
 	initKeyboard();
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
-    char charScreenWidth[10];
+    char charScreenWidth[30];
+    MemoryManager memoryManager;
+    int memory = memoryManager.getMemorySize();
 
-    intToCharArray(charScreenWidth, screenWidth);
-
-    const char* screenWidthStr = "Screen Width = ";
+    intToCharArray(charScreenWidth, memory);
+    const char* screenWidthStr = "memory(MB) = ";
     char result[30];
     stringcat(screenWidthStr, charScreenWidth, result);
 

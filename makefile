@@ -31,11 +31,14 @@ Platform.o: Platform.h Platform.cpp
 InterruptionBuffer.o: InterruptionBuffer.h InterruptionBuffer.cpp
 	gcc -c -O0 -m32 -fno-stack-protector InterruptionBuffer.cpp -o InterruptionBuffer.o
 
+MemoryManager.o: MemoryManager.h MemoryManager.cpp
+	gcc -c -O0 -m32 -fno-stack-protector MemoryManager.cpp -o MemoryManager.o
+
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o
-	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o -o BootProgramLink.o
+BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o
+	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
 	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img
