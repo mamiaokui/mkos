@@ -54,25 +54,22 @@ void MemoryManager::free(unsigned int address, unsigned int size)
         {
             m_frees[i - 1].m_size += size;
             address = m_frees[i - 1].m_address;
-            size += m_frees[i - 1].m_size;
+            size = m_frees[i - 1].m_size;
             state++;
         }
     }
 
-    if (i < m_freeItemCount-1)
+    if (address + size == m_frees[i].m_address)
     {
-        if (address + size == m_frees[i].m_address)
-        {
-            m_frees[i].m_size += size;
-            m_frees[i].m_address = address;
-            size = m_frees[i].m_size;
-            state++;
-        }
+        m_frees[i].m_size += size;
+        m_frees[i].m_address = address;
+        size = m_frees[i].m_size;
+        state++;
     }
 
     if (state == 0)
     {
-        for (int j = m_freeItemCount; j >= i; j--)
+        for (int j = m_freeItemCount; j > i; j--)
         {
             m_frees[j] = m_frees[j - 1];
         }
