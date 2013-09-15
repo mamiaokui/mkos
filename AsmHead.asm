@@ -151,19 +151,13 @@ LABEL_BEGIN:
                                         ;将代码段的选择子装入cs
 
 [BITS	32]
-[SECTION .bss]
-StackSpace resb 30 * 1024 
-StackTop:		
-        
 [SECTION .s32]; 32 位代码段. 由实模式跳入.
 
 
 ;以下才是真正的数据段，此处与数据段段描述符相呼应。
 LABEL_SEG_CODE32:
-    mov esp, StackTop
     call RellocELF
-
-        ;; 	jmp	BOOTPROGRAM_POS_RELLOC
+    mov esp, 0x3FFF00;0x200000 to near 0x400000 is stack.
     jmp 16:0
 
 ; 遍历每一个 Program Header，根据 Program Header 中的信息来确定把什么放进内存，放到什么位置，以及放多少。

@@ -53,3 +53,6 @@ clean:
 
 run: clean all makefile 
 	qemu OS.img
+
+test: MemoryManager.cpp test.cpp
+	g++ -O0 -m32 -DMKDEBUG=1 MemoryManager.cpp test.cpp  -o test.o
