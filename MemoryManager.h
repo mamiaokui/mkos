@@ -13,6 +13,8 @@ private:
 
     unsigned int checkMemory();
     unsigned int checkMemorySub();
+    unsigned int mallocInternal(unsigned int size);
+    void freeInternal(unsigned int address, unsigned int size);
 
 public:
     MemoryManager();
@@ -20,6 +22,8 @@ public:
     unsigned int volatile m_checkNumber1;
     unsigned int volatile m_checkNumber2;
     unsigned int volatile m_largeNumber;
+
+    //4K for one block, malloc blocks.
     unsigned int malloc(unsigned int size);
     void free(unsigned int address, unsigned int size);
     void report(void (*reporter)(FreeItem&));

@@ -16,6 +16,12 @@ MemoryManager::MemoryManager()
 
 unsigned int MemoryManager::malloc(unsigned int size)
 {
+    size = ((size + 0xfff) >> 12) << 12;
+    mallocInternal(size);
+}
+
+unsigned int MemoryManager::mallocInternal(unsigned int size)
+{
     for (int i = 0; i < m_freeItemCount; i++)
     {
         if (m_frees[i].m_size > size)
@@ -38,6 +44,12 @@ unsigned int MemoryManager::malloc(unsigned int size)
 }
 
 void MemoryManager::free(unsigned int address, unsigned int size)
+{
+    size = ((size + 0xfff) >> 12) << 12;
+    freeInternal(address, size);
+}
+
+void MemoryManager::freeInternal(unsigned int address, unsigned int size)
 {
     int i;
     for (i = 0; i < m_freeItemCount; i++)
