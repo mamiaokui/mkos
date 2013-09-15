@@ -148,6 +148,12 @@ extern "C" void MKOSMain(void)
                     initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
                     int* outputData = mouseDataDecoder.getMouseData();
                     mx += outputData[1];
+                    //fix me. don't know the true reason. mouse always receive large negative y move.
+                    //temp fix.
+                    if (outputData[2] < -200)
+                    {
+                        outputData[2] = 0;
+                    }
                     my += outputData[2];
                     if (mx < 0)
                     {
@@ -160,8 +166,8 @@ extern "C" void MKOSMain(void)
                     if (mx > screenWidth - 16)
                         mx = screenWidth -16;
 
-                    if (my > screenWidth - 16)
-                        my = screenWidth -16;
+                    if (my > screenHeight - 16)
+                        my = screenHeight -16;
 
                     paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
 
