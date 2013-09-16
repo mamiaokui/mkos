@@ -14,8 +14,8 @@ Layer::Layer()
 
 void Layer::init(int width, int height)
 {
-    extern MemoryManager memoryManager;
-    m_buffer = (unsigned char*)memoryManager.malloc(width * height);
+    extern MemoryManager* globalMemoryManager;
+    m_buffer = (unsigned char*)globalMemoryManager->malloc(width * height);
     m_width = width;
     m_height = height;
 }
@@ -26,8 +26,8 @@ void LayerManager::init(unsigned char* vram, int screenWidth, int screenHeight)
     m_vram = vram;
     m_screenWidth = screenWidth;
     m_screenHeight = screenHeight;
-    extern MemoryManager memoryManager;
-    m_vramTemp = (unsigned char*)memoryManager.malloc(m_screenWidth * m_screenHeight);
+    extern MemoryManager* globalMemoryManager;
+    m_vramTemp = (unsigned char*)globalMemoryManager->malloc(m_screenWidth * m_screenHeight);
     m_layerTop = -1;
     for (int i = 0; i < MAX_LAYERS; i++)
     {
@@ -41,8 +41,8 @@ LayerManager* LayerManager::getLayerManager()
 {
     if (m_layerManager == 0)
     {
-        extern MemoryManager memoryManager;
-        m_layerManager = (LayerManager*) memoryManager.malloc(sizeof(LayerManager));
+        extern MemoryManager* globalMemoryManager;
+        m_layerManager = (LayerManager*) globalMemoryManager->malloc(sizeof(LayerManager));
     }
     return m_layerManager;
 }

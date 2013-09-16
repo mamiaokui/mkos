@@ -179,4 +179,4 @@ void MemoryManager::report(void (*reporter)(FreeItem&))
     }
 }
 
-MemoryManager memoryManager;
+

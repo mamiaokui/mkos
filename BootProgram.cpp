@@ -11,6 +11,7 @@ void * __gxx_personality_v0=0;
 void * _Unwind_Resume =0;
 
 extern InterruptionBuffer globalInterruptionBuffer;
+MemoryManager* globalMemoryManager;
 
 class MouseDataDecoder 
 {
@@ -100,7 +101,8 @@ extern "C" void MKOSMain(void)
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[30];
-    extern MemoryManager memoryManager;
+    MemoryManager memoryManager;
+    globalMemoryManager = &memoryManager;
     int memory = memoryManager.getMemorySize();
 
     intToCharArray(charScreenWidth, memory);
