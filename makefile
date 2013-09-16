@@ -55,7 +55,7 @@ clean:
 	rm -f *.img
 
 run: clean all makefile 
-	qemu -m 64 OS.img
+	qemu -m 256 OS.img
 
 test: MemoryManager.cpp test.cpp
 	g++ -g -O0 -m32 -DMKDEBUG=1 MemoryManager.cpp test.cpp  -o test.o
