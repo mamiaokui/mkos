@@ -34,10 +34,13 @@ InterruptionBuffer.o: InterruptionBuffer.h InterruptionBuffer.cpp
 MemoryManager.o: MemoryManager.h MemoryManager.cpp
 	gcc -c -O0 -m32 -fno-stack-protector MemoryManager.cpp -o MemoryManager.o
 
+LayerManager.o: LayerManager.h LayerManager.cpp
+	gcc -c -O0 -m32 -fno-stack-protector LayerManager.cpp -o LayerManager.o
+
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o
+BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o
 	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
@@ -52,7 +55,7 @@ clean:
 	rm -f *.img
 
 run: clean all makefile 
-	qemu OS.img
+	qemu -m 64 OS.img
 
 test: MemoryManager.cpp test.cpp
 	g++ -g -O0 -m32 -DMKDEBUG=1 MemoryManager.cpp test.cpp  -o test.o
