@@ -100,7 +100,7 @@ extern "C" void MKOSMain(void)
 	initPalette();     
     initScreen(vram, screenWidth, screenHeight);
     char charScreenWidth[30];
-    MemoryManager memoryManager;
+    extern MemoryManager memoryManager;
     int memory = memoryManager.getMemorySize();
 
     intToCharArray(charScreenWidth, memory);

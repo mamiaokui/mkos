@@ -178,3 +178,5 @@ void MemoryManager::report(void (*reporter)(FreeItem&))
         reporter(m_frees[i]);
     }
 }
+
+MemoryManager memoryManager;
