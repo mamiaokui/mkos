@@ -89,7 +89,7 @@ extern "C" void MKOSMain(void)
 
     int screenWidth = bootInfo->m_screenWidth;
     int screenHeight = bootInfo->m_screenHeight;
-    char* vram = bootInfo->m_vram;
+    unsigned char* vram = bootInfo->m_vram;
     int interruptionBufferData[128];
     globalInterruptionBuffer.initInterruptionBuffer(128, interruptionBufferData);
     initGdtIdt();

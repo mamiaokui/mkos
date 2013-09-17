@@ -5,7 +5,7 @@ typedef struct {
     int m_vmode;
     int m_screenWidth;
     int m_screenHeight;
-    char* m_vram;
+    unsigned char* m_vram;
 } BootInfo;
 
 #define AR_DATA32_RW	0x4092

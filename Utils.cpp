@@ -88,7 +88,7 @@ void doLog()
 
     int screenWidth = bootInfo->m_screenWidth;
     int screenHeight = bootInfo->m_screenHeight;
-    char* vram = bootInfo->m_vram;
+    unsigned char* vram = bootInfo->m_vram;
 
     char aValue[10];
     char bValue[10];

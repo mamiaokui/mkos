@@ -44,7 +44,7 @@ void setPalette(int start, int end, const unsigned char *rgb)
 	return;
 }
 
-void drawRect(char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1)
+void drawRect(unsigned char *vram, int screenWidth, unsigned char c, int x0, int y0, int x1, int y1)
 {
 	int x, y;
 	for (y = y0; y <= y1; y++) {
@@ -54,12 +54,12 @@ void drawRect(char *vram, int screenWidth, unsigned char c, int x0, int y0, int 
 	return;
 }
 
-void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
+void printFont(unsigned char *vram, int xsize, int x, int y, char c, char ascii)
 {
-    char* fontBase = (char*)(&asmGlobalFont); //font data in memory
+    unsigned char* fontBase = (unsigned char*)(&asmGlobalFont); //font data in memory
 	int i;
-	char *vramPoint, line ;
-    char* font = fontBase + ascii * 16; //every string cost 16 * sizeof(char)
+	unsigned char *vramPoint, line ;
+    unsigned char* font = fontBase + ascii * 16; //every string cost 16 * sizeof(char)
 	for (i = 0; i < 16; i++) {
 		vramPoint = vram + (y + i) * xsize + x;
 		line = font[i];
@@ -73,7 +73,7 @@ void printFont(char *vram, int xsize, int x, int y, char c, char ascii)
 
 
 
-void printString(char *vram, int xsize, int x, int y, char c, const char *s)
+void printString(unsigned char *vram, int xsize, int x, int y, char c, const char *s)
 {
     for(; *s != '\0'; s++) {
         printFont(vram, xsize, x, y, c, s[0]);
@@ -82,7 +82,7 @@ void printString(char *vram, int xsize, int x, int y, char c, const char *s)
 	return;
 }
 
-void initScreen(char *vram, int screenWidth, int screenHeight)
+void initScreen(unsigned char *vram, int screenWidth, int screenHeight)
 {
 	drawRect(vram, screenWidth, COL008484,  0,         0,          screenWidth -  1, screenHeight - 29);
 	drawRect(vram, screenWidth, COLC6C6C6,  0,         screenHeight - 28, screenWidth -  1, screenHeight - 28);
@@ -141,7 +141,7 @@ void initMouseCursor(char *mouseBuffer256, char backgroundColor)
 
 }
 
-void paintBlock(char *vram, int screenWidth, int blockWidth,
+void paintBlock(unsigned char *vram, int screenWidth, int blockWidth,
 	int blockHeight, int paintPositionX, int paintPositionY, const char *imageData)
 {
     int x, y;
