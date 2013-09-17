@@ -1,4 +1,5 @@
 #include "MemoryManager.h"
+#include "LayerManager.h"
 #include "iostream"
 using namespace std;
 void foo(FreeItem& item)
@@ -47,8 +48,13 @@ void test4(MemoryManager& m)
     cout << endl;
 }
 
+void test5()
+{
+    LayerManager* manager = LayerManager::getLayerManager();
+    
+}
+
 int main()
 {
-    MemoryManager m;
-    test4(m);
+    test5();
 }

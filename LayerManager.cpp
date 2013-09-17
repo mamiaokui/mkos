@@ -1,6 +1,9 @@
 #include "LayerManager.h"
 #ifndef MKDEBUG
 #include "MemoryManager.h"
+#else
+#include <iostream>
+using namespace std;
 #endif
 #include "Platform.h"
 LayerManager* LayerManager::m_layerManager = 0;
@@ -21,7 +24,7 @@ void Layer::init(int width, int height)
     extern MemoryManager* globalMemoryManager;
     m_buffer = (unsigned char*)globalMemoryManager->malloc(width * height);
 #else
-    m_buffer = (unsigned char*)malloc(width * height);
+    m_buffer = (unsigned char*)new unsigned char(width * height);
 #endif
     m_width = width;
     m_height = height;
@@ -37,7 +40,7 @@ void LayerManager::init(unsigned char* vram, int screenWidth, int screenHeight)
     extern MemoryManager* globalMemoryManager;
     m_vramTemp = (unsigned char*)globalMemoryManager->malloc(m_screenWidth * m_screenHeight);
 #else
-    m_vramTemp = (unsigned char*)malloc(m_screenWidth * m_screenHeight);
+    m_vramTemp = (unsigned char*)new unsigned char (m_screenWidth * m_screenHeight);
 #endif
     m_layerTop = -1;
     for (int i = 0; i < MAX_LAYERS; i++)
@@ -56,13 +59,23 @@ LayerManager* LayerManager::getLayerManager()
         extern MemoryManager* globalMemoryManager;
         m_layerManager = (LayerManager*) globalMemoryManager->malloc(sizeof(LayerManager));
 #else
-        m_layerManager = (LayerManager*) malloc(sizeof(LayerManager));
+        unsigned int layerManagerSize = sizeof(LayerManager);
+        m_layerManager = (LayerManager*) new unsigned char(layerManagerSize);
 #endif
         BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
 
+#ifndef MKDEBUG
         int screenWidth = bootInfo->m_screenWidth;
         int screenHeight = bootInfo->m_screenHeight;
         unsigned char* vram = bootInfo->m_vram;
+#else
+        int screenWidth = 320;
+        int screenHeight = 200;
+        
+        unsigned char* vram = new unsigned char[320*200];
+        cout << "vram is " << &vram[0] << endl;
+
+#endif
 
         m_layerManager->init(vram, screenWidth, screenHeight);
     }

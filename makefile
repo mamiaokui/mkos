@@ -57,5 +57,5 @@ clean:
 run: clean all makefile 
 	qemu -m 256 OS.img
 
-test: MemoryManager.cpp test.cpp
-	g++ -g -O0  -DMKDEBUG=1 MemoryManager.cpp test.cpp  -o test.o
+test: MemoryManager.cpp test.cpp LayerManager.cpp
+	g++ -g -O0  -DMKDEBUG=1 MemoryManager.cpp LayerManager.cpp test.cpp  -o test.o
