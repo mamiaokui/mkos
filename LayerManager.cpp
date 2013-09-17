@@ -43,13 +43,20 @@ LayerManager* LayerManager::getLayerManager()
     {
         extern MemoryManager* globalMemoryManager;
         m_layerManager = (LayerManager*) globalMemoryManager->malloc(sizeof(LayerManager));
+        BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
+
+        int screenWidth = bootInfo->m_screenWidth;
+        int screenHeight = bootInfo->m_screenHeight;
+        char* vram = bootInfo->m_vram;
+
+        m_layerManager->init(vram, screenWidth, screenHeight);
     }
     return m_layerManager;
 }
 
 Layer* LayerManager::generateLayer()
 {
-    Layer* layer;
+    Layer* layer = 0;
     for (int i = 0; i < MAX_LAYERS; i++)
     {
         if (m_layerContainer[i].m_flags == 0)
@@ -57,23 +64,33 @@ Layer* LayerManager::generateLayer()
             layer = m_layerContainer + i;
             layer->m_flags = LAYER_INUSE;
             layer->m_zorder = -1;
-            for (int i = m_layerCount; i > 0; i--)
+
+            int index;
+            for (index = m_layerCount-1; index >= 0; index--)
             {
-                if (m_layers[i - 1]->m_zorder > layer->m_zorder)
+                if (m_layers[index]->m_zorder > layer->m_zorder)
                 {
-                    m_layers[i] = m_layers[i - 1];
+                    m_layers[index+i] = m_layers[index];
                 }
                 else
                 {
-                    m_layers[i] = layer;
                     break;
                 }
             }
+
+            //not found
+            if (index == -1)
+            {
+                m_layers[0] = layer;
+            }
+            else
+            {
+                m_layers[index+1] = layer;
+            }
+            m_layerCount++;
             return layer;
         }
     }
-
-    m_layerCount++;
 
     // guess never come to here;
     return 0;
@@ -116,10 +133,10 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
             int paintPositionY = rectLayer[1];
             int blockWidth = rectLayer[2];
             int blockHeight = rectLayer[3];
-            for (int x = paintPositionX; x <= blockHeight; x++)
-                for ( int y = paintPositionY; y <= blockWidth; y++)
+            for (int y = paintPositionY; y <= blockHeight; y++)
+                for ( int x = paintPositionX; x <= blockWidth; x++)
                 {
-                    m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(x-m_layers[i]->m_x) * m_layers[i]->m_width + (y-m_layers[i]->m_height)];
+                    m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x];
                 }
         }
     }
@@ -151,8 +168,10 @@ bool LayerManager::rectClip(int a[4], int b[4])
     //has cliped
     if (a[0] + a[2] > b[0] && a[1] + a[3] > b[1])
     {
-        a[2] = a[2] - b[0];
-        a[3] = a[3] = b[1];
+        a[0] = b[0];
+        a[1] = b[1];
+        a[2] = a[0] + a[2] - b[0];
+        a[3] = a[1] + a[3] - b[1];
         return true;
     }
 
