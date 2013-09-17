@@ -2,6 +2,7 @@
 #include "LayerManager.h"
 #include "iostream"
 using namespace std;
+
 void foo(FreeItem& item)
 {
     cout << std::hex << item.m_address << " " << std::dec << item.m_size/1024/1024<< endl;
@@ -50,6 +51,7 @@ void test4(MemoryManager& m)
 
 void test5()
 {
+
     LayerManager* manager = LayerManager::getLayerManager();
     Layer* layer1 = manager->generateLayer();
     layer1->m_x = 0;
@@ -84,10 +86,19 @@ void test5()
         layer3->m_buffer[i] = 'c';
     }
 
+    extern unsigned char* globalVram;
+    for (int i = 0; i < 50; i++)
+    {
+        for (int j = 0; j < 100; j++)
+        {
+            globalVram[i*100+j] = '0';
+        }
+    }
+
     manager->changeZOrderTop(layer1);
     manager->changeZOrderTop(layer2);
     manager->changeZOrderTop(layer3);
-    extern unsigned char* globalVram;
+
     for (int i = 0; i < 50; i++)
     {
         for (int j = 0; j < 100; j++)

@@ -14,6 +14,7 @@ public:
     unsigned int m_flags;
     Layer();
     void init(int width, int height);
+    int m_indexInLayers;
 };
 
 class LayerManager

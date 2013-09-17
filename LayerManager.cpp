@@ -25,7 +25,7 @@ void Layer::init(int width, int height)
     extern MemoryManager* globalMemoryManager;
     m_buffer = (unsigned char*)globalMemoryManager->malloc(width * height);
 #else
-    m_buffer = (unsigned char*)new unsigned char(width * height);
+    m_buffer = (unsigned char*)new char(width * height);
 #endif
     m_width = width;
     m_height = height;
@@ -41,7 +41,7 @@ void LayerManager::init(unsigned char* vram, int screenWidth, int screenHeight)
     extern MemoryManager* globalMemoryManager;
     m_vramTemp = (unsigned char*)globalMemoryManager->malloc(m_screenWidth * m_screenHeight);
 #else
-    m_vramTemp = (unsigned char*)new unsigned char (m_screenWidth * m_screenHeight);
+    m_vramTemp = (unsigned char*)new char (m_screenWidth * m_screenHeight);
 #endif
     m_layerTop = -1;
     for (int i = 0; i < MAX_LAYERS; i++)
@@ -61,7 +61,7 @@ LayerManager* LayerManager::getLayerManager()
         m_layerManager = (LayerManager*) globalMemoryManager->malloc(sizeof(LayerManager));
 #else
         unsigned int layerManagerSize = sizeof(LayerManager);
-        m_layerManager = (LayerManager*) new unsigned char(layerManagerSize);
+        m_layerManager = new LayerManager();
 #endif
         BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
 
@@ -73,8 +73,7 @@ LayerManager* LayerManager::getLayerManager()
         int screenWidth = 100;
         int screenHeight = 50;
         
-        unsigned char* vram = new unsigned char[screenWidth * screenHeight];
-        cout << "vram is " << &vram[0] << endl;
+        unsigned char* vram = (unsigned char*)new char[screenWidth * screenHeight];
         globalVram = vram;
 
 #endif
@@ -101,6 +100,7 @@ Layer* LayerManager::generateLayer()
                 if (m_layers[index]->m_zorder > layer->m_zorder)
                 {
                     m_layers[index+i] = m_layers[index];
+                    m_layers[index+i]->m_indexInLayers = index+i;
                 }
                 else
                 {
@@ -112,10 +112,12 @@ Layer* LayerManager::generateLayer()
             if (index == -1)
             {
                 m_layers[0] = layer;
+                m_layers[0]->m_indexInLayers = 0;
             }
             else
             {
                 m_layers[index+1] = layer;
+                m_layers[index+1]->m_indexInLayers = index + 1;
             }
             m_layerCount++;
             return layer;
@@ -129,7 +131,8 @@ Layer* LayerManager::generateLayer()
 void LayerManager::changeZOrderTop(Layer* layer)
 {
     int oldZorder = layer->m_zorder;
-    int currentIndex = 0;
+    int currentIndex = layer->m_indexInLayers;
+    /*
     for (int i = m_layerCount - 1; i >= 0; i--)
     {
         if(m_layers[i]->m_zorder == oldZorder)
@@ -138,12 +141,19 @@ void LayerManager::changeZOrderTop(Layer* layer)
             break;
         }
     }
+    */
+
+    if (oldZorder == -1)
+        m_layerTop++;
     
     for (int i = currentIndex; i < m_layerCount - 1; i++)
     {
         m_layers[i] = m_layers[i + 1];
+        m_layers[i]->m_indexInLayers = i;
     }
     m_layers[m_layerCount - 1] = layer;
+    m_layers[m_layerCount - 1]->m_indexInLayers = m_layerCount - 1;
+    layer->m_zorder = m_layerTop; 
     repaint(layer->m_x, layer->m_y, layer->m_width, layer->m_height);
 }
 
@@ -163,17 +173,17 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
             int paintPositionY = rectLayer[1];
             int blockWidth = rectLayer[2];
             int blockHeight = rectLayer[3];
-            for (int y = paintPositionY; y <= blockHeight; y++)
-                for ( int x = paintPositionX; x <= blockWidth; x++)
+            for (int y = paintPositionY; y < blockHeight; y++)
+                for ( int x = paintPositionX; x < blockWidth; x++)
                 {
                     m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x];
                 }
         }
     }
 
-    for (int x = xPos; x <= width; x++)
+    for (int x = xPos; x < width; x++)
     {
-        for ( int y = yPos; y <= height; y++)
+        for ( int y = yPos; y < height; y++)
         {
             m_vram[y * m_screenWidth + x] = m_vramTemp[y * m_screenWidth + x];
         }
