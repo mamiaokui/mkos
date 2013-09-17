@@ -148,7 +148,7 @@ unsigned int MemoryManager::checkMemory()
 unsigned int MemoryManager::checkMemorySub()
 {
     unsigned int i = 0x1000000;
-    for (; i < (unsigned int)(0xffffffff); i+=0x1000)
+    for (; i < (unsigned int)(0xffffffff); i+=0x1000000/4)
     {
         unsigned int* p = (unsigned int*)(i + 0xffc);
         unsigned int old = *p;
