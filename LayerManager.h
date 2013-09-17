@@ -33,8 +33,9 @@ public:
     void init(unsigned char* vram, int screenWidth, int screenHeight);
     Layer* generateLayer();
     void changeZOrderTop(Layer* layer);
-    void repaint(int width, int height);
-    
+    void repaint(int x, int y, int width, int height);
+    bool rectClip(int a[4], int b[4]);
+    void moveLayer(Layer* layer, int x, int y);
 };
 
 
