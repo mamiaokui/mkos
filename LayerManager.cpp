@@ -4,6 +4,7 @@
 #else
 #include <iostream>
 using namespace std;
+unsigned char* globalVram;
 #endif
 #include "Platform.h"
 LayerManager* LayerManager::m_layerManager = 0;
@@ -69,11 +70,12 @@ LayerManager* LayerManager::getLayerManager()
         int screenHeight = bootInfo->m_screenHeight;
         unsigned char* vram = bootInfo->m_vram;
 #else
-        int screenWidth = 320;
-        int screenHeight = 200;
+        int screenWidth = 100;
+        int screenHeight = 50;
         
-        unsigned char* vram = new unsigned char[320*200];
+        unsigned char* vram = new unsigned char[screenWidth * screenHeight];
         cout << "vram is " << &vram[0] << endl;
+        globalVram = vram;
 
 #endif
 

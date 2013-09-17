@@ -51,7 +51,51 @@ void test4(MemoryManager& m)
 void test5()
 {
     LayerManager* manager = LayerManager::getLayerManager();
-    
+    Layer* layer1 = manager->generateLayer();
+    layer1->m_x = 0;
+    layer1->m_y = 0;
+    layer1->m_width = 20;
+    layer1->m_height = 10;
+    layer1->init(20, 10);
+    for (int i = 0; i < 20*10; i++)
+    {
+        layer1->m_buffer[i] = 'a';
+    }
+    Layer* layer2 = manager->generateLayer();
+    layer2->m_x = 5;
+    layer2->m_y = 10;
+    layer2->m_width = 20;
+    layer2->m_height = 10;
+    layer2->init(20, 10);
+    for (int i = 0; i < 20*10; i++)
+    {
+        layer2->m_buffer[i] = 'b';
+    }
+
+    Layer* layer3 = manager->generateLayer();
+    layer3->m_x = 8;
+    layer3->m_y = 12;
+    layer3->m_width = 20;
+    layer3->m_height = 10;
+    layer3->init(20, 10);
+
+    for (int i = 0; i < 20*10; i++)
+    {
+        layer3->m_buffer[i] = 'c';
+    }
+
+    manager->changeZOrderTop(layer1);
+    manager->changeZOrderTop(layer2);
+    manager->changeZOrderTop(layer3);
+    extern unsigned char* globalVram;
+    for (int i = 0; i < 50; i++)
+    {
+        for (int j = 0; j < 100; j++)
+        {
+            cout << globalVram[i*100+j];
+        }
+        cout << endl;
+    }
 }
 
 int main()
