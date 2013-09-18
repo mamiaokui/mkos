@@ -82,7 +82,7 @@ void test5()
     {
         for (int j = 0; j < 100; j++)
         {
-            globalVram[i*100+j] = '0';
+            globalVram[i*100+j] = '.';
         }
     }
 
@@ -90,6 +90,8 @@ void test5()
     manager->changeZOrderTop(layer2);
     manager->changeZOrderTop(layer3);
     manager->changeZOrderTop(layer1);
+
+    layer2->setPosition(20, 20);
 
     for (int i = 0; i < 50; i++)
     {
@@ -99,6 +101,8 @@ void test5()
         }
         cout << endl;
     }
+
+
 }
 
 int main()

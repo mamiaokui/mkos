@@ -32,11 +32,12 @@ void Layer::init(LayerManager* layerManager, int width, int height)
     m_layerManager = layerManager;
 }
 
-void Layer::setPosition(int x, int y)
+void Layer::setPosition(int x, int y, bool needRepaint)
 {
     m_x = x;
     m_y = y;
-    m_layerManager->repaint(m_x, m_y, m_width, m_height);
+    if (needRepaint)
+        m_layerManager->repaint(m_x, m_y, m_width, m_height);
 }
 
 unsigned char* Layer::getBuffer(int &width, int &height)
@@ -58,7 +59,7 @@ void LayerManager::init(unsigned char* vram, int screenWidth, int screenHeight)
     m_vramTemp = (unsigned char*)new char [m_screenWidth * m_screenHeight];
     for (int i = 0; i < m_screenHeight * m_screenHeight; i++)
     {
-        m_vramTemp[i] = '0';
+        m_vramTemp[i] = '.';
     }
 #endif
     m_layerTop = -1;
