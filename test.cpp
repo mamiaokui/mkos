@@ -64,8 +64,8 @@ void test5()
         layer1->m_buffer[i] = 'a';
     }
     Layer* layer2 = manager->generateLayer();
-    layer2->m_x = 5;
-    layer2->m_y = 10;
+    layer2->m_x = 3;
+    layer2->m_y = 3;
     layer2->m_width = 20;
     layer2->m_height = 10;
     layer2->init(20, 10);
@@ -75,8 +75,8 @@ void test5()
     }
 
     Layer* layer3 = manager->generateLayer();
-    layer3->m_x = 8;
-    layer3->m_y = 12;
+    layer3->m_x = 6;
+    layer3->m_y = 6;
     layer3->m_width = 20;
     layer3->m_height = 10;
     layer3->init(20, 10);
@@ -98,6 +98,7 @@ void test5()
     manager->changeZOrderTop(layer1);
     manager->changeZOrderTop(layer2);
     manager->changeZOrderTop(layer3);
+    manager->changeZOrderTop(layer1);
 
     for (int i = 0; i < 50; i++)
     {

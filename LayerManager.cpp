@@ -25,7 +25,7 @@ void Layer::init(int width, int height)
     extern MemoryManager* globalMemoryManager;
     m_buffer = (unsigned char*)globalMemoryManager->malloc(width * height);
 #else
-    m_buffer = (unsigned char*)new char(width * height);
+    m_buffer = (unsigned char*)new char[width * height];
 #endif
     m_width = width;
     m_height = height;
@@ -41,7 +41,11 @@ void LayerManager::init(unsigned char* vram, int screenWidth, int screenHeight)
     extern MemoryManager* globalMemoryManager;
     m_vramTemp = (unsigned char*)globalMemoryManager->malloc(m_screenWidth * m_screenHeight);
 #else
-    m_vramTemp = (unsigned char*)new char (m_screenWidth * m_screenHeight);
+    m_vramTemp = (unsigned char*)new char [m_screenWidth * m_screenHeight];
+    for (int i = 0; i < m_screenHeight * m_screenHeight; i++)
+    {
+        m_vramTemp[i] = '0';
+    }
 #endif
     m_layerTop = -1;
     for (int i = 0; i < MAX_LAYERS; i++)
@@ -173,21 +177,21 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
             int paintPositionY = rectLayer[1];
             int blockWidth = rectLayer[2];
             int blockHeight = rectLayer[3];
-            for (int y = paintPositionY; y < blockHeight; y++)
-                for ( int x = paintPositionX; x < blockWidth; x++)
+            for (int y = paintPositionY; y < paintPositionY + blockHeight; y++)
+                for ( int x = paintPositionX; x < paintPositionX + blockWidth; x++)
                 {
-                    m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x];
+                    m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x-m_layers[i]->m_x];
                 }
         }
     }
 
-    for (int x = xPos; x < width; x++)
+
+    for ( int y = yPos; y < yPos + height; y++)
     {
-        for ( int y = yPos; y < height; y++)
-        {
+        for (int x = xPos; x < xPos + width; x++)
             m_vram[y * m_screenWidth + x] = m_vramTemp[y * m_screenWidth + x];
-        }
     }
+
 }
 
 bool LayerManager::rectClip(int a[4], int b[4])
