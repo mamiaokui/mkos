@@ -53,37 +53,28 @@ void test5()
 {
 
     LayerManager* manager = LayerManager::getLayerManager();
-    Layer* layer1 = manager->generateLayer();
-    layer1->m_x = 0;
-    layer1->m_y = 0;
-    layer1->m_width = 20;
-    layer1->m_height = 10;
-    layer1->init(20, 10);
+    Layer* layer1 = manager->generateLayer(20, 10);
+    layer1->setPosition(0, 0);
     for (int i = 0; i < 20*10; i++)
     {
-        layer1->m_buffer[i] = 'a';
+        int a = 0;
+        layer1->getBuffer(a, a)[i] = 'a';
     }
-    Layer* layer2 = manager->generateLayer();
-    layer2->m_x = 3;
-    layer2->m_y = 3;
-    layer2->m_width = 20;
-    layer2->m_height = 10;
-    layer2->init(20, 10);
+    Layer* layer2 = manager->generateLayer(20, 10);
+    layer2->setPosition(3, 3);
     for (int i = 0; i < 20*10; i++)
     {
-        layer2->m_buffer[i] = 'b';
+        int a = 0;
+        layer2->getBuffer(a, a)[i] = 'b';
     }
 
-    Layer* layer3 = manager->generateLayer();
-    layer3->m_x = 6;
-    layer3->m_y = 6;
-    layer3->m_width = 20;
-    layer3->m_height = 10;
-    layer3->init(20, 10);
+    Layer* layer3 = manager->generateLayer(20, 10);
+    layer3->setPosition(6, 6);
 
     for (int i = 0; i < 20*10; i++)
     {
-        layer3->m_buffer[i] = 'c';
+        int a = 0;
+        layer3->getBuffer(a,a)[i] = 'c';
     }
 
     extern unsigned char* globalVram;

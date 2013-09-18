@@ -2,9 +2,10 @@
 #define LayerManager_h
 #define MAX_LAYERS 100
 #define LAYER_INUSE 1
+class LayerManager;
 class Layer
 {
-public:
+private:
     unsigned char* m_buffer;
     int m_width;
     int m_height;
@@ -13,8 +14,13 @@ public:
     int m_zorder;
     unsigned int m_flags;
     Layer();
-    void init(int width, int height);
+    void init(LayerManager* layerManager, int width, int height);
     int m_indexInLayers;
+    LayerManager* m_layerManager;
+    friend class LayerManager;
+public:
+    void setPosition(int x, int y);
+    unsigned char* getBuffer(int &width, int &height);
 };
 
 class LayerManager
@@ -32,7 +38,7 @@ private:
 public:
     static LayerManager* getLayerManager();
     void init(unsigned char* vram, int screenWidth, int screenHeight);
-    Layer* generateLayer();
+    Layer* generateLayer(int width, int height);
     void changeZOrderTop(Layer* layer);
     void repaint(int x, int y, int width, int height);
     bool rectClip(int a[4], int b[4]);

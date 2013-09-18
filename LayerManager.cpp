@@ -19,7 +19,7 @@ Layer::Layer()
     m_flags = 0;
 }
 
-void Layer::init(int width, int height)
+void Layer::init(LayerManager* layerManager, int width, int height)
 {
 #ifndef MKDEBUG
     extern MemoryManager* globalMemoryManager;
@@ -29,8 +29,22 @@ void Layer::init(int width, int height)
 #endif
     m_width = width;
     m_height = height;
+    m_layerManager = layerManager;
 }
 
+void Layer::setPosition(int x, int y)
+{
+    m_x = x;
+    m_y = y;
+    m_layerManager->repaint(m_x, m_y, m_width, m_height);
+}
+
+unsigned char* Layer::getBuffer(int &width, int &height)
+{
+    width = m_width;
+    height = m_height;
+    return m_buffer;
+}
 
 void LayerManager::init(unsigned char* vram, int screenWidth, int screenHeight)
 {
@@ -87,7 +101,7 @@ LayerManager* LayerManager::getLayerManager()
     return m_layerManager;
 }
 
-Layer* LayerManager::generateLayer()
+Layer* LayerManager::generateLayer(int width, int height)
 {
     Layer* layer = 0;
     for (int i = 0; i < MAX_LAYERS; i++)
@@ -124,6 +138,7 @@ Layer* LayerManager::generateLayer()
                 m_layers[index+1]->m_indexInLayers = index + 1;
             }
             m_layerCount++;
+            layer->init(this, width, height);
             return layer;
         }
     }
