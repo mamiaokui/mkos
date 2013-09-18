@@ -53,19 +53,28 @@ void test5()
 {
 
     LayerManager* manager = LayerManager::getLayerManager();
+    Layer* layerBackground = manager->generateLayer(100, 50);
+
+    for (int i = 0; i < 100*50; i++)
+    {
+        layerBackground->getBuffer()[i] = '.';
+    }
+
+    layerBackground->setPosition(0, 0);
+
+    manager->changeZOrderTop(layerBackground);
+
     Layer* layer1 = manager->generateLayer(20, 10);
 
 
     for (int i = 0; i < 20*10; i++)
     {
-        int a = 0;
-        layer1->getBuffer(a, a)[i] = 'a';
+        layer1->getBuffer()[i] = 'a';
     }
     Layer* layer2 = manager->generateLayer(20, 10);
     for (int i = 0; i < 20*10; i++)
     {
-        int a = 0;
-        layer2->getBuffer(a, a)[i] = 'b';
+        layer2->getBuffer()[i] = 'b';
     }
 
     Layer* layer3 = manager->generateLayer(20, 10);
@@ -73,17 +82,9 @@ void test5()
     for (int i = 0; i < 20*10; i++)
     {
         int a = 0;
-        layer3->getBuffer(a,a)[i] = 'c';
+        layer3->getBuffer()[i] = 'c';
     }
 
-    extern unsigned char* globalVram;
-    for (int i = 0; i < 50; i++)
-    {
-        for (int j = 0; j < 100; j++)
-        {
-            globalVram[i*100+j] = '.';
-        }
-    }
 
     layer1->setPosition(27, 27);
     layer2->setPosition(3, 3);
@@ -99,7 +100,7 @@ void test5()
     manager->changeZOrderTop(layer3);
     manager->changeZOrderTop(layer1);
     layer1->setPosition(35, 35);
-
+    extern unsigned char* globalVram;
     for (int i = 0; i < 50; i++)
     {
         for (int j = 0; j < 100; j++)

@@ -20,7 +20,7 @@ private:
     friend class LayerManager;
 public:
     void setPosition(int x, int y, bool needRepaint = true);
-    unsigned char* getBuffer(int &width, int &height);
+    unsigned char* getBuffer();
 };
 
 class LayerManager

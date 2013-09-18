@@ -45,10 +45,8 @@ void Layer::setPosition(int x, int y, bool needRepaint)
     }
 }
 
-unsigned char* Layer::getBuffer(int &width, int &height)
+unsigned char* Layer::getBuffer()
 {
-    width = m_width;
-    height = m_height;
     return m_buffer;
 }
 
