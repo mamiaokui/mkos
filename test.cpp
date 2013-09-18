@@ -60,8 +60,7 @@ void test5()
         layerBackground->getBuffer()[i] = '.';
     }
 
-
-
+    manager->changeZOrderTop(layerBackground);
 
     Layer* layer1 = manager->generateLayer(20, 10);
 
@@ -94,7 +93,7 @@ void test5()
     layer3->setPosition(30, 30);
     layer2->setPosition(25, 25);
 
-    manager->changeZOrderTop(layerBackground);
+
     manager->changeZOrderTop(layer1);
     manager->changeZOrderTop(layer2);
     manager->changeZOrderTop(layer3);
