@@ -34,10 +34,15 @@ void Layer::init(LayerManager* layerManager, int width, int height)
 
 void Layer::setPosition(int x, int y, bool needRepaint)
 {
+    int oldX = m_x;
+    int oldY = m_y;
     m_x = x;
     m_y = y;
     if (needRepaint)
+    {
+        m_layerManager->repaint(oldX, oldY, m_width, m_height);
         m_layerManager->repaint(m_x, m_y, m_width, m_height);
+    }
 }
 
 unsigned char* Layer::getBuffer(int &width, int &height)
@@ -196,6 +201,9 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
             for (int y = paintPositionY; y < paintPositionY + blockHeight; y++)
                 for ( int x = paintPositionX; x < paintPositionX + blockWidth; x++)
                 {
+                    unsigned char gdb = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x-m_layers[i]->m_x];
+                    if (gdb != 'a' && gdb != 'b' && gdb != 'c' && gdb != '.')
+                        gdb ++;
                     m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x-m_layers[i]->m_x];
                 }
         }
@@ -226,12 +234,23 @@ bool LayerManager::rectClip(int a[4], int b[4])
     }
     
     //has cliped
-    if (a[0] + a[2] > b[0] && a[1] + a[3] > b[1])
+    int xSmallerBackup[4];
+    for (int i = 0; i < 4; i++)
     {
-        a[0] = b[0];
-        a[1] = b[1];
-        a[2] = a[0] + a[2] - b[0];
-        a[3] = a[1] + a[3] - b[1];
+        xSmallerBackup[i] = xSmaller[i];
+    }
+    if (xSmaller[0] + xSmaller[2] > xLarger[0] && xSmaller[1] + xSmaller[3] > xLarger[1])
+    {
+        xSmaller[0] = xLarger[0];
+        xSmaller[1] = xLarger[1];
+        xSmaller[2] = xSmallerBackup[0] + xSmaller[2] - xLarger[0];
+        xSmaller[3] = xSmallerBackup[1] + xSmaller[3] - xLarger[1];
+
+        for (int i = 0; i < 4; i++)
+        {
+            a[i] = xSmaller[i];
+        }
+        
         return true;
     }
 

@@ -54,14 +54,14 @@ void test5()
 
     LayerManager* manager = LayerManager::getLayerManager();
     Layer* layer1 = manager->generateLayer(20, 10);
-    layer1->setPosition(0, 0);
+
+
     for (int i = 0; i < 20*10; i++)
     {
         int a = 0;
         layer1->getBuffer(a, a)[i] = 'a';
     }
     Layer* layer2 = manager->generateLayer(20, 10);
-    layer2->setPosition(3, 3);
     for (int i = 0; i < 20*10; i++)
     {
         int a = 0;
@@ -69,7 +69,6 @@ void test5()
     }
 
     Layer* layer3 = manager->generateLayer(20, 10);
-    layer3->setPosition(6, 6);
 
     for (int i = 0; i < 20*10; i++)
     {
@@ -86,12 +85,20 @@ void test5()
         }
     }
 
+    layer1->setPosition(27, 27);
+    layer2->setPosition(3, 3);
+
+    layer2->setPosition(10, 10);
+    layer3->setPosition(6, 6);
+
+    layer3->setPosition(30, 30);
+    layer2->setPosition(25, 25);
+
     manager->changeZOrderTop(layer1);
     manager->changeZOrderTop(layer2);
     manager->changeZOrderTop(layer3);
     manager->changeZOrderTop(layer1);
-
-    layer2->setPosition(20, 20);
+    layer1->setPosition(35, 35);
 
     for (int i = 0; i < 50; i++)
     {
@@ -103,6 +110,15 @@ void test5()
     }
 
 
+}
+
+void test6()
+{
+        LayerManager* manager = LayerManager::getLayerManager();
+        int a[4] = {27, 27, 20, 10};
+        int b[4] = {25, 25, 20, 10};
+        manager->rectClip(a, b);
+        cout << a[0] << a[1] << a[2] << a[3]<< endl;
 }
 
 int main()
