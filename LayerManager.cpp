@@ -146,6 +146,7 @@ Layer* LayerManager::generateLayer(int width, int height)
 
 Layer* LayerManager::generateWindow(int width, int height, char* prompt)
 {
+#ifndef MKDEBUG
     Layer* layer = generateLayer(width, height);
 
 
@@ -195,7 +196,9 @@ Layer* LayerManager::generateWindow(int width, int height, char* prompt)
 		}
 	}
 	return layer;
-
+#else
+    return 0;
+#endif
 }
 
 void LayerManager::changeZOrderTop(Layer* layer)
@@ -292,4 +295,5 @@ bool LayerManager::rectClip(int a[4], int b[4])
     }
 
     return false;
+#
 }

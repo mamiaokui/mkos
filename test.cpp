@@ -69,15 +69,15 @@ void test5()
     {
         layer1->getBuffer()[i] = 'a';
     }
-    Layer* layer2 = manager->generateLayer(8, 16);
-    for (int i = 0; i < 8*16; i++)
+    Layer* layer2 = manager->generateLayer(8, 30);
+    for (int i = 0; i < 8*30; i++)
     {
         layer2->getBuffer()[i] = 'b';
     }
 
-    Layer* layer3 = manager->generateLayer(20, 10);
+    Layer* layer3 = manager->generateLayer(5, 5);
 
-    for (int i = 0; i < 20*10; i++)
+    for (int i = 0; i < 5*5; i++)
     {
         int a = 0;
         layer3->getBuffer()[i] = 'c';
@@ -99,6 +99,13 @@ void test5()
     manager->changeZOrderTop(layer3);
     manager->changeZOrderTop(layer1);
     layer1->setPosition(5, 5);
+    layer3->setPosition(5, 5);
+    manager->changeZOrderTop(layer3);
+    layer3->setPosition(11, 5);
+    layer3->setPosition(17, 5);
+    layer3->setPosition(23, 5);
+    layer3->setPosition(29, 5);
+    layer3->setPosition(36, 5);
     extern unsigned char* globalVram;
     for (int i = 0; i < 50; i++)
     {
@@ -117,7 +124,7 @@ void test5()
         switch(command)
         {
         case 'm':
-            manager->m_layerContainer[layer].setPosition(manager->m_layerContainer[layer].getX() + value,manager->m_layerContainer[layer].getY() + value);
+            manager->m_layerContainer[layer].setPosition(manager->m_layerContainer[layer].getX() + value,manager->m_layerContainer[layer].getY());
             break;
         case 'c':
             manager->changeZOrderTop(&manager->m_layerContainer[layer]);
