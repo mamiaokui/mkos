@@ -48,6 +48,10 @@ void StartupManager::init()
     initMouseCursor(mouseCursorImage);
     m_layerMouse = m_layerManager->generateLayer(16, 16);
     paintBlock(m_layerMouse->getBuffer(), 16, 16, 16, 0, 0, mouseCursorImage);
+
+    Layer* layerWindow = m_layerManager->generateWindow(160, 68, "MKOS");
+    m_layerManager->changeZOrderTop(layerWindow);
+    layerWindow->setPosition(30, 30);
     m_layerManager->changeZOrderTop(m_layerMouse);
 
     enableMouse();

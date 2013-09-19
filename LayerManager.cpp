@@ -144,6 +144,60 @@ Layer* LayerManager::generateLayer(int width, int height)
     return 0;
 }
 
+Layer* LayerManager::generateWindow(int width, int height, char* prompt)
+{
+    Layer* layer = generateLayer(width, height);
+
+
+	char closebtn[14][17] = {
+		"OOOOOOOOOOOOOOO@",
+		"OQQQQQQQQQQQQQ$@",
+		"OQQQQQQQQQQQQQ$@",
+		"OQQQ@@QQQQ@@QQ$@",
+		"OQQQQ@@QQ@@QQQ$@",
+		"OQQQQQ@@@@QQQQ$@",
+		"OQQQQQQ@@QQQQQ$@",
+		"OQQQQQ@@@@QQQQ$@",
+		"OQQQQ@@QQ@@QQQ$@",
+		"OQQQ@@QQQQ@@QQ$@",
+		"OQQQQQQQQQQQQQ$@",
+		"OQQQQQQQQQQQQQ$@",
+		"O$$$$$$$$$$$$$$@",
+		"@@@@@@@@@@@@@@@@"
+	};
+	int x, y;
+	char c;
+
+	drawRect(layer->getBuffer(), width, COLC6C6C6, 0,         0,         width - 1, 0        );
+	drawRect(layer->getBuffer(), width, COLFFFFFF, 1,         1,         width - 2, 1        );
+	drawRect(layer->getBuffer(), width, COLC6C6C6, 0,         0,         0,         height - 1);
+	drawRect(layer->getBuffer(), width, COLFFFFFF, 1,         1,         1,         height - 2);
+	drawRect(layer->getBuffer(), width, COL848484, width - 2, 1,         width - 2, height - 2);
+	drawRect(layer->getBuffer(), width, COL000000, width - 1, 0,         width - 1, height - 1);
+	drawRect(layer->getBuffer(), width, COLC6C6C6, 2,         2,         width - 3, height - 3);
+	drawRect(layer->getBuffer(), width, COL000084, 3,         3,         width - 4, 20       );
+	drawRect(layer->getBuffer(), width, COL848484, 1,         height - 2, width - 2, height - 2);
+	drawRect(layer->getBuffer(), width, COL000000, 0,         height - 1, width - 1, height - 1);
+	printString(layer->getBuffer(), width, 24, 4, COLFFFFFF, prompt);
+	for (y = 0; y < 14; y++) {
+		for (x = 0; x < 16; x++) {
+			c = closebtn[y][x];
+			if (c == '@') {
+				c = COL000000;
+			} else if (c == '$') {
+				c = COL848484;
+			} else if (c == 'Q') {
+				c = COLC6C6C6;
+			} else {
+				c = COLFFFFFF;
+			}
+			layer->getBuffer()[(5 + y) * width + (width - 21 + x)] = c;
+		}
+	}
+	return layer;
+
+}
+
 void LayerManager::changeZOrderTop(Layer* layer)
 {
     int oldZorder = layer->m_zorder;

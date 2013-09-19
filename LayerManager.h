@@ -42,6 +42,7 @@ public:
     static LayerManager* getLayerManager();
     void init(unsigned char* vram, int screenWidth, int screenHeight);
     Layer* generateLayer(int width, int height);
+    Layer* generateWindow(int width, int height, char* prompt);
     void changeZOrderTop(Layer* layer);
     void repaint(int x, int y, int width, int height);
     bool rectClip(int a[4], int b[4]);
