@@ -9,11 +9,13 @@ private:
     int m_size;
     int m_free;
     int m_flags;
+    static InterruptionBuffer* m_interruptionBuffer;
 public:
     void initInterruptionBuffer(int size, int* buffer);
     void inputInterruptionBuffer(int data);
-    int getInterruptionBuffer();
+    int getInterruptionBufferData();
     bool isInterruptionBufferEmpty();
+    static InterruptionBuffer* getInterruptionBuffer();
 } ;
 
 #define BUFFER_OVERFLOW 1

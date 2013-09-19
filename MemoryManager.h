@@ -25,6 +25,9 @@ public:
 
     //4K for one block, malloc blocks.
     unsigned int malloc(unsigned int size);
+
+    //TODO: bad design, no one use free function, so memory leak in the OS. 
+    //needredisign it
     void free(unsigned int address, unsigned int size);
     void report(void (*reporter)(FreeItem&));
 };
