@@ -102,7 +102,7 @@ void initScreen(unsigned char *vram, int screenWidth, int screenHeight)
 	drawRect(vram, screenWidth, COLFFFFFF, screenWidth -  3, screenHeight - 24, screenWidth -  3, screenHeight -  3);
 }
 
-void initMouseCursor(char *mouseBuffer256, char backgroundColor)
+void initMouseCursor(unsigned char *mouseBuffer256)
 {
     static char cursor[16][17] = {
 		"**************..",
@@ -133,7 +133,7 @@ void initMouseCursor(char *mouseBuffer256, char backgroundColor)
 				mouseBuffer256[x * 16 + y] = COLFFFFFF;
 			}
 			if (cursor[x][y] == '.') {
-				mouseBuffer256[x * 16 + y] = backgroundColor;
+				mouseBuffer256[x * 16 + y] = COLINVISI;
 			}
 		}
 	}
@@ -142,7 +142,7 @@ void initMouseCursor(char *mouseBuffer256, char backgroundColor)
 }
 
 void paintBlock(unsigned char *vram, int screenWidth, int blockWidth,
-	int blockHeight, int paintPositionX, int paintPositionY, const char *imageData)
+	int blockHeight, int paintPositionX, int paintPositionY, const unsigned char *imageData)
 {
     int x, y;
     for (x = 0; x < blockHeight; x++)

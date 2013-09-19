@@ -41,7 +41,7 @@ BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
 BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o
-	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o -o BootProgramLink.o
+	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
 	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img

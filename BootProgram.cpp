@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "InterruptionBuffer.h"
 #include "MemoryManager.h"
+#include "LayerManager.h"
 
 //change from c to cpp, ld link error because can't find the implement.
 void * __gxx_personality_v0=0;
@@ -96,10 +97,15 @@ extern "C" void MKOSMain(void)
 	asmOut8(PIC1_IMR, 0xef); 
 	initKeyboard();
 	initPalette();     
-    initScreen(vram, screenWidth, screenHeight);
-    char charScreenWidth[30];
     MemoryManager memoryManager;
     globalMemoryManager = &memoryManager;
+    LayerManager* layerManager = LayerManager::getLayerManager();
+    Layer* layerBackground = layerManager->generateLayer(screenWidth, screenHeight);
+    initScreen(layerBackground->getBuffer(), screenWidth, screenHeight);
+
+
+    
+    char charScreenWidth[30];
     int memory = memoryManager.getMemorySize();
 
     intToCharArray(charScreenWidth, memory);
@@ -107,15 +113,18 @@ extern "C" void MKOSMain(void)
     char result[30];
     stringcat(screenWidthStr, charScreenWidth, result);
 
-    printString(vram, screenWidth, 8, 8, COL000000, result);
+    printString(layerBackground->getBuffer(), screenWidth, 8, 8, COL000000, result);
 
-    char mouseCursorImage[256];
+    layerManager->changeZOrderTop(layerBackground);
+
+    unsigned char mouseCursorImage[256];
 	int mx = (screenWidth - 16) / 2;
 	int my = (screenHeight - 28 - 16) / 2;
 
-    initMouseCursor(mouseCursorImage, COL008484);
-    paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
-
+    initMouseCursor(mouseCursorImage);
+    Layer* layerMouse = layerManager->generateLayer(16, 16);
+    paintBlock(layerMouse->getBuffer(), screenWidth, 16, 16, 0, 0, mouseCursorImage);
+    layerManager->changeZOrderTop(layerMouse);
 
     enableMouse();
     
@@ -134,15 +143,15 @@ extern "C" void MKOSMain(void)
             {
                 char b[10];
                 intToCharArray(b, intData);
-                initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
-                printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+                initScreen(layerBackground->getBuffer(), bootInfo->m_screenWidth, bootInfo->m_screenHeight);
+                printString(layerBackground->getBuffer(), bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
+                layerManager->repaint(0, 0, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
             }
             else if (intData >= 512)
             {
                 bool output =  mouseDataDecoder.receiveMouseInterruption(intData - 512);
                 if (output)
                 {
-                    initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
                     int* outputData = mouseDataDecoder.getMouseData();
                     mx += outputData[1];
                     //fix me. don't know the true reason. mouse always receive large negative y move.
@@ -166,7 +175,7 @@ extern "C" void MKOSMain(void)
                     if (my > screenHeight - 16)
                         my = screenHeight -16;
 
-                    paintBlock(vram, screenWidth, 16, 16, mx, my, mouseCursorImage);
+                    layerMouse->setPosition(mx, my);
 
                 }
             }

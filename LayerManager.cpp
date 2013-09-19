@@ -7,6 +7,7 @@ using namespace std;
 unsigned char* globalVram;
 #endif
 #include "Platform.h"
+#include "PaintPack.h"
 LayerManager* LayerManager::m_layerManager = 0;
 Layer::Layer()
 {
@@ -196,7 +197,9 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
                     if (gdb != 'a' && gdb != 'b' && gdb != 'c' && gdb != '.')
                         gdb ++;
 #endif
-                    m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x-m_layers[i]->m_x];
+                    unsigned char color = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x-m_layers[i]->m_x];
+                    if (color != COLINVISI)
+                        m_vramTemp[y * m_screenWidth + x] = color;
                 }
         }
     }

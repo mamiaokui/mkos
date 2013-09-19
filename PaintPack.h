@@ -16,6 +16,7 @@
 #define COL840084		13
 #define COL008484		14
 #define COL848484		15
+#define COLINVISI       0xff
 extern unsigned char table_rgb[16 * 3];
 void initPalette(void);
 void setPalette(int start, int end, const unsigned char *rgb);
@@ -24,8 +25,8 @@ void printFont(unsigned char *vram, int xsize, int x, int y, char c, char charac
 void printString(unsigned char *vram, int xsize, int x, int y, char c, const char *s);
 void initScreen(unsigned char *vram, int width, int height);
 void paintBlock(unsigned char *vram, int screenWidth, int blockWidth,
-                int blockHeight, int paintPositionX, int paintPositionY, const char *imageData);
+                int blockHeight, int paintPositionX, int paintPositionY, const unsigned char *imageData);
 //the mouse cursor size is 16*16
-void initMouseCursor(char *mouseBuffer256, char backgroundColor);
+void initMouseCursor(unsigned char *mouseBuffer256);
 
 #endif
