@@ -1,3 +1,5 @@
+#ifndef MouseDataDecoder_h
+#define MouseDataDecoder_h
 class MouseDataDecoder 
 {
 private:
@@ -64,3 +66,4 @@ public:
         return m_mouseDecodeData;
     }
 };
+#endif
