@@ -82,9 +82,6 @@ public:
 
 extern "C" void MKOSMain(void)
 {
-    log_1 = 0x98765;
-    startUpFinished = 0;
-
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
 
     int screenWidth = bootInfo->m_screenWidth;
@@ -121,8 +118,6 @@ extern "C" void MKOSMain(void)
 
 
     enableMouse();
-    doLog();
-    startUpFinished = 1;
     
     MouseDataDecoder mouseDataDecoder;
     while (true)

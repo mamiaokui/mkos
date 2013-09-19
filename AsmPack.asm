@@ -23,18 +23,7 @@
         EXTERN  int21Handler
         EXTERN  int27Handler
         EXTERN  int2cHandler
-        EXTERN  logInC
-        ;; logInC demo
-        ;;         push 123
-        ;;         push 456
-        ;;         push 789
-        ;;         push 135
-        ;;         call logInC
-        ;;         pop eax
-        ;;         pop eax
-        ;;         pop eax
-        ;;         pop eax
-        ;; will show 135, 789 in screen
+
 
 
 

@@ -7,6 +7,5 @@ void doLog();
 extern int enableLog;
 extern int log_1;
 extern int log_2;
-extern int startUpFinished;
 
 #endif

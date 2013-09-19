@@ -4,7 +4,6 @@
 int enableLog;
 int log_1;
 int log_2;
-int startUpFinished;
 void intToCharArray(char* dest, int number)
 {
     int index = 0;
@@ -70,32 +69,3 @@ void stringcat(const char* begin, const char* end, char* result)
     result[resultIndex] = '\0';
 }
 
-void logInC(int a ,int b)
-{
-    if (enableLog == 0 && startUpFinished == 0)
-        return;
-    log_1 = a;
-    log_2 = b;
-    if (startUpFinished)
-        doLog();
-}
-
-void doLog()
-{
-    if (log_1 == 0x98765)
-        return;
-    BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
-
-    int screenWidth = bootInfo->m_screenWidth;
-    int screenHeight = bootInfo->m_screenHeight;
-    unsigned char* vram = bootInfo->m_vram;
-
-    char aValue[10];
-    char bValue[10];
-    char result[20];
-    intToCharArray(aValue, log_1);
-    intToCharArray(bValue, log_2);
-    printString(vram, screenWidth, 8, 30, COL000000, aValue);    
-    printString(vram, screenWidth, 8, 60, COL000000, bValue);    
-
-}
