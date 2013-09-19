@@ -130,17 +130,9 @@ Layer* LayerManager::generateLayer(int width, int height)
                 }
             }
 
-            //not found
-            if (index == -1)
-            {
-                m_layers[0] = layer;
-                m_layers[0]->m_indexInLayers = 0;
-            }
-            else
-            {
-                m_layers[index+1] = layer;
-                m_layers[index+1]->m_indexInLayers = index + 1;
-            }
+            m_layers[index+1] = layer;
+            m_layers[index+1]->m_indexInLayers = index + 1;
+
             m_layerCount++;
             layer->init(this, width, height);
             return layer;
