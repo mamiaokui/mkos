@@ -21,6 +21,8 @@ private:
 public:
     void setPosition(int x, int y, bool needRepaint = true);
     unsigned char* getBuffer();
+    int getX() {return m_x;}
+    int getY() {return m_y;}
 };
 
 class LayerManager
@@ -32,10 +34,11 @@ private:
     int m_screenHeight;
     int m_layerTop;
     Layer* m_layers[100];
-    Layer m_layerContainer[100];
+
     static LayerManager* m_layerManager;
     int m_layerCount;
 public:
+    Layer m_layerContainer[100];
     static LayerManager* getLayerManager();
     void init(unsigned char* vram, int screenWidth, int screenHeight);
     Layer* generateLayer(int width, int height);

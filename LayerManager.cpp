@@ -121,8 +121,8 @@ Layer* LayerManager::generateLayer(int width, int height)
             {
                 if (m_layers[index]->m_zorder > layer->m_zorder)
                 {
-                    m_layers[index+i] = m_layers[index];
-                    m_layers[index+i]->m_indexInLayers = index+i;
+                    m_layers[index+1] = m_layers[index];
+                    m_layers[index+1]->m_indexInLayers = index+i;
                 }
                 else
                 {
@@ -199,9 +199,11 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
             for (int y = paintPositionY; y < paintPositionY + blockHeight; y++)
                 for ( int x = paintPositionX; x < paintPositionX + blockWidth; x++)
                 {
+#ifdef MKDEBUG
                     unsigned char gdb = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x-m_layers[i]->m_x];
                     if (gdb != 'a' && gdb != 'b' && gdb != 'c' && gdb != '.')
                         gdb ++;
+#endif
                     m_vramTemp[y * m_screenWidth + x] = m_layers[i]->m_buffer[(y-m_layers[i]->m_y) * m_layers[i]->m_width + x-m_layers[i]->m_x];
                 }
         }

@@ -108,7 +108,31 @@ void test5()
         }
         cout << endl;
     }
+    
+    while(true)
+    {
+        char command;
+        int layer, value;
+        cin >> command >> layer >>value;
+        switch(command)
+        {
+        case 'm':
+            manager->m_layerContainer[layer].setPosition(manager->m_layerContainer[layer].getX() + value,manager->m_layerContainer[layer].getY() + value);
+            break;
+        case 'c':
+            manager->changeZOrderTop(&manager->m_layerContainer[layer]);
+            break;
+        }
+        for (int i = 0; i < 50; i++)
+        {
+            for (int j = 0; j < 100; j++)
+            {
+                cout << globalVram[i*100+j];
+            }
+            cout << endl;
+        }
 
+    }
 
 }
 
