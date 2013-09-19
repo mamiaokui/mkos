@@ -46,6 +46,7 @@ public:
     void repaint(int x, int y, int width, int height);
     bool rectClip(int a[4], int b[4]);
     void moveLayer(Layer* layer, int x, int y);
+    int min(int a, int b) {return (a < b)?a:b;}
 };
 
 

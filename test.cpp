@@ -62,15 +62,15 @@ void test5()
 
     manager->changeZOrderTop(layerBackground);
 
-    Layer* layer1 = manager->generateLayer(20, 10);
+    Layer* layer1 = manager->generateLayer(16, 16);
 
 
-    for (int i = 0; i < 20*10; i++)
+    for (int i = 0; i < 16*16; i++)
     {
         layer1->getBuffer()[i] = 'a';
     }
-    Layer* layer2 = manager->generateLayer(20, 10);
-    for (int i = 0; i < 20*10; i++)
+    Layer* layer2 = manager->generateLayer(8, 16);
+    for (int i = 0; i < 8*16; i++)
     {
         layer2->getBuffer()[i] = 'b';
     }
@@ -144,6 +144,16 @@ void test6()
         manager->rectClip(a, b);
         cout << a[0] << a[1] << a[2] << a[3]<< endl;
 }
+
+void test7()
+{
+        LayerManager* manager = LayerManager::getLayerManager();
+        int a[4] = {27, 27, 16, 16};
+        int b[4] = {30, 30, 20, 10};
+        manager->rectClip(a, b);
+        cout << a[0] <<' ' << a[1] <<' '<< a[2] <<' '<< a[3]<< endl;
+}
+
 
 int main()
 {

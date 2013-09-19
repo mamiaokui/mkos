@@ -148,16 +148,6 @@ void LayerManager::changeZOrderTop(Layer* layer)
 {
     int oldZorder = layer->m_zorder;
     int currentIndex = layer->m_indexInLayers;
-    /*
-    for (int i = m_layerCount - 1; i >= 0; i--)
-    {
-        if(m_layers[i]->m_zorder == oldZorder)
-        {
-            currentIndex = i;
-            break;
-        }
-    }
-    */
 
     if (oldZorder == -1)
         m_layerTop++;
@@ -229,21 +219,19 @@ bool LayerManager::rectClip(int a[4], int b[4])
     }
     
     //has cliped
-    int xSmallerBackup[4];
-    for (int i = 0; i < 4; i++)
-    {
-        xSmallerBackup[i] = xSmaller[i];
-    }
+    int result[4];
     if (xSmaller[0] + xSmaller[2] > xLarger[0] && xSmaller[1] + xSmaller[3] > xLarger[1])
     {
-        xSmaller[0] = xLarger[0];
-        xSmaller[1] = xLarger[1];
-        xSmaller[2] = xSmallerBackup[0] + xSmaller[2] - xLarger[0];
-        xSmaller[3] = xSmallerBackup[1] + xSmaller[3] - xLarger[1];
+        result[0] = xLarger[0];
+        result[1] = xLarger[1];
+        int smallRightX = min(xSmaller[0] + xSmaller[2], xLarger[0] + xLarger[2]);
+        int smallDownY = min(xSmaller[1] + xSmaller[3], xLarger[1] + xLarger[3]);
+        result[2] = smallRightX - result[0];
+        result[3] = smallDownY - result[1];
 
         for (int i = 0; i < 4; i++)
         {
-            a[i] = xSmaller[i];
+            a[i] = result[i];
         }
         
         return true;
