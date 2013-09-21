@@ -24,6 +24,7 @@ extern "C" void int27Handler(int* arg);
 extern "C" void asmInt27Handler(void);
 
 extern "C" void int2cHandler(int* arg);
+extern "C" void int20Handler(int* arg);
 extern "C" void asmInt2cHandler(void);
 extern "C" void asmInt20Handler(void);
 

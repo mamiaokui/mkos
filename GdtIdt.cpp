@@ -45,10 +45,10 @@ void initGdtIdt()
 	for (i = 0; i < 256; i++) {
 		setIDTI(idt + i, 0, 0, 0);
 	}
+	setIDTI(idt + 0x20, (int) asmInt20Handler-0x200000, 2 * 8, AR_INTGATE32);
     setIDTI(idt + 0x21, (int) asmInt21Handler-0x200000, 2 * 8, AR_INTGATE32);
 	setIDTI(idt + 0x27, (int) asmInt27Handler-0x200000, 2 * 8, AR_INTGATE32);
 	setIDTI(idt + 0x2c, (int) asmInt2cHandler-0x200000, 2 * 8, AR_INTGATE32);
-	setIDTI(idt + 0x20, (int) asmInt20Handler-0x200000, 2 * 8, AR_INTGATE32);
 
 	asmLoadIDTR(0x7ff, (int)idt);
 	return;
@@ -79,5 +79,14 @@ void int2cHandler(int* arg)
 	data = asmIn8(PORT_KEYBOARD);
     //same as int21
 	InterruptionBuffer::getInterruptionBuffer()->inputInterruptionBuffer(data + 512);
+	return;
+}
+
+int count = 0;
+void int20Handler(int* arg)
+{
+    count ++;
+	InterruptionBuffer::getInterruptionBuffer()->inputInterruptionBuffer(33 + 256);
+	asmOut8(PIC0_OCW2, 0x67); 
 	return;
 }

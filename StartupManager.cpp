@@ -8,6 +8,7 @@
 #include "LayerManager.h"
 #include "MouseHandler.h"
 #include "MemoryManager.h"
+#include "Timer.h"
 
 
 void StartupManager::init()
@@ -21,8 +22,10 @@ void StartupManager::init()
 	asmSti(); 
 	asmOut8(PIC0_IMR, 0xf9); 
 	asmOut8(PIC1_IMR, 0xef); 
+    Timer::getTimer();
 	initKeyboard();
 	initPalette();     
+
 
     m_layerManager = LayerManager::getLayerManager();
     m_layerBackground = m_layerManager->generateLayer(m_screenWidth, m_screenHeight);
@@ -65,10 +68,9 @@ void StartupManager::loop()
 	int my = (m_screenHeight - 28 - 16) / 2;
     m_layerMouse->setPosition(mx, my);
 
-    int count = 0;
+    extern int count;
     while (true)
     {
-        count ++;
         char charScreenWidth[30];
         intToCharArray(charScreenWidth, count);
         m_layerManager->initWindow(m_layerWindow, m_layerWindow->getWidth(), m_layerWindow->getHeight(), "MKOS");
