@@ -164,5 +164,7 @@ void test7()
 
 int main()
 {
-    test5();
+    test6();
+    test7();
+    //test5();
 }

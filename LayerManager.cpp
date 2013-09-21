@@ -262,38 +262,18 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
 
 bool LayerManager::rectClip(int a[4], int b[4])
 {
-    int* xSmaller;
-    int* xLarger;
-    if (a[0] < b[0])
-    {
-        xSmaller = a;
-        xLarger = b;
-    }
-    else
-    {
-        xSmaller = b;
-        xLarger = a;
-    }
-    
-    //has cliped
-    int result[4];
-    if (xSmaller[0] + xSmaller[2] > xLarger[0] && xSmaller[1] + xSmaller[3] > xLarger[1])
-    {
-        result[0] = xLarger[0];
-        result[1] = xLarger[1];
-        int smallRightX = min(xSmaller[0] + xSmaller[2], xLarger[0] + xLarger[2]);
-        int smallDownY = min(xSmaller[1] + xSmaller[3], xLarger[1] + xLarger[3]);
-        result[2] = smallRightX - result[0];
-        result[3] = smallDownY - result[1];
+    int left = max(a[0], b[0]);
+    int top = max(a[1], b[1]);
+    int right = min(a[2] + a[0], b[2] + b[0]);
+    int bottom = min(a[3] + a[1], b[3] + b[1]);
 
-        for (int i = 0; i < 4; i++)
-        {
-            a[i] = result[i];
-        }
-        
-        return true;
+    if (left >= right || top >= bottom) {
+        return false;
     }
 
-    return false;
-#
+    a[0] = left;
+    a[1] = top;
+    a[2] = right - left;
+    a[3] = bottom - top;
+    return true;
 }
