@@ -43,12 +43,15 @@ StartupManager.o: StartupManager.h StartupManager.cpp
 Timer.o: Timer.h Timer.cpp
 	gcc -c -O0 -m32 -fno-stack-protector Timer.cpp -o Timer.o
 
+KeyBoardMouseHandler.o: KeyBoardMouseHandler.h KeyBoardMouseHandler.cpp
+	gcc -c -O0 -m32 -fno-stack-protector KeyBoardMouseHandler.cpp -o KeyBoardMouseHandler.o
+
 
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmTools.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o
-	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmTools.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o -o BootProgramLink.o
+BootProgramLink.o: AsmTools.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o
+	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmTools.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmToCpp.o BootProgramLink.o RESB.o
 	cat IPL.o AsmToCpp.o BootProgramLink.o RESB.o > OS.img

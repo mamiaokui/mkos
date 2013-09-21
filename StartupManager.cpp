@@ -6,7 +6,7 @@
 #include "Utils.h"
 #include "InterruptionBuffer.h"
 #include "LayerManager.h"
-#include "MouseHandler.h"
+#include "KeyBoardMouseHandler.h"
 #include "MemoryManager.h"
 #include "Timer.h"
 
@@ -23,7 +23,7 @@ void StartupManager::init()
 	asmOut8(PIC0_IMR, 0xf8); 
 	asmOut8(PIC1_IMR, 0xef); 
     Timer::getTimer();
-	initKeyboard();
+    KeyBoardMouseHandler::getHandler()->initKeyboard();
 	initPalette();     
 
 
@@ -58,12 +58,11 @@ void StartupManager::init()
     layerWindow->setPosition(30, 30);
     m_layerManager->changeZOrderTop(m_layerMouse);
 
-    enableMouse();
+    KeyBoardMouseHandler::getHandler()->enableMouse();
 }
 
 void StartupManager::loop()
 {
-    MouseDataDecoder mouseDataDecoder;
 	int mx = (m_screenWidth - 16) / 2;
 	int my = (m_screenHeight - 28 - 16) / 2;
     m_layerMouse->setPosition(mx, my);
@@ -95,10 +94,10 @@ void StartupManager::loop()
             }
             else if (intData >= 512)
             {
-                bool output =  mouseDataDecoder.receiveMouseInterruption(intData - 512);
+                bool output =  KeyBoardMouseHandler::getHandler()->receiveMouseInterruption(intData - 512);
                 if (output)
                 {
-                    int* outputData = mouseDataDecoder.getMouseData();
+                    int* outputData = KeyBoardMouseHandler::getHandler()->getMouseData();
 
                     mx += outputData[1];
                     //fix me. don't know the true reason. mouse always receive large negative y move.
