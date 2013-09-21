@@ -1,8 +1,8 @@
 IPL.o : IPL.asm
 	nasm IPL.asm -o IPL.o
 
-AsmHead.o: AsmHead.asm
-	nasm -g AsmHead.asm -o AsmHead.o
+AsmToCpp.o: AsmToCpp.asm
+	nasm -g AsmToCpp.asm -o AsmToCpp.o
 
 RESB.o: RESB.asm
 	nasm RESB.asm -o RESB.o
@@ -10,8 +10,8 @@ RESB.o: RESB.asm
 BootProgram.o: BootProgram.cpp
 	gcc -c -O0 -m32 -fno-stack-protector BootProgram.cpp -o BootProgram.o
 
-AsmPack.o: AsmPack.asm
-	nasm -f elf  AsmPack.asm -o AsmPack.o
+AsmTools.o: AsmTools.asm
+	nasm -f elf  AsmTools.asm -o AsmTools.o
 
 FontData.o: FontData.asm
 	nasm  -f elf FontData.asm -o FontData.o
@@ -47,11 +47,11 @@ Timer.o: Timer.h Timer.cpp
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmPack.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o
-	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmPack.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o -o BootProgramLink.o
+BootProgramLink.o: AsmTools.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o
+	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmTools.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o -o BootProgramLink.o
 
-OS.img: IPL.o AsmHead.o BootProgramLink.o RESB.o
-	cat IPL.o AsmHead.o BootProgramLink.o RESB.o > OS.img
+OS.img: IPL.o AsmToCpp.o BootProgramLink.o RESB.o
+	cat IPL.o AsmToCpp.o BootProgramLink.o RESB.o > OS.img
 	@bash check.sh
 
 all: OS.img makefile
