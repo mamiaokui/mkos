@@ -10,6 +10,7 @@ private:
     int m_screenHeight;
     Layer* m_layerBackground;
     Layer* m_layerMouse;
+    Layer* m_layerWindow;
     LayerManager* m_layerManager;
 public:
     void init();

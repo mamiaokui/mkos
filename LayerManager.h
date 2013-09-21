@@ -23,6 +23,8 @@ public:
     unsigned char* getBuffer();
     int getX() {return m_x;}
     int getY() {return m_y;}
+    int getWidth() {return m_width;}
+    int getHeight() {return m_height;}
 };
 
 class LayerManager
@@ -49,6 +51,7 @@ public:
     void moveLayer(Layer* layer, int x, int y);
     int min(int a, int b) {return (a < b)?a:b;}
     int max(int a, int b) {return (a > b)?a:b;}
+    void initWindow(Layer* layer, int width, int height, char*prompt);
 };
 
 

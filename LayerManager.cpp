@@ -144,13 +144,9 @@ Layer* LayerManager::generateLayer(int width, int height)
     return 0;
 }
 
-Layer* LayerManager::generateWindow(int width, int height, char* prompt)
+void LayerManager::initWindow(Layer* layer, int width, int height, char* prompt)
 {
-#ifndef MKDEBUG
-    Layer* layer = generateLayer(width, height);
-
-
-	char closebtn[14][17] = {
+    	static char closebtn[14][17] = {
 		"OOOOOOOOOOOOOOO@",
 		"OQQQQQQQQQQQQQ$@",
 		"OQQQQQQQQQQQQQ$@",
@@ -195,9 +191,14 @@ Layer* LayerManager::generateWindow(int width, int height, char* prompt)
 			layer->getBuffer()[(5 + y) * width + (width - 21 + x)] = c;
 		}
 	}
-	return layer;
-#else
-    return 0;
+}
+
+Layer* LayerManager::generateWindow(int width, int height, char* prompt)
+{
+#ifndef MKDEBUG
+    Layer* layer = generateLayer(width, height);
+    initWindow(layer, width, height, prompt);
+    return layer;
 #endif
 }
 

@@ -50,6 +50,7 @@ void StartupManager::init()
     paintBlock(m_layerMouse->getBuffer(), 16, 16, 16, 0, 0, mouseCursorImage);
 
     Layer* layerWindow = m_layerManager->generateWindow(160, 68, "MKOS");
+    m_layerWindow = layerWindow;
     m_layerManager->changeZOrderTop(layerWindow);
     layerWindow->setPosition(30, 30);
     m_layerManager->changeZOrderTop(m_layerMouse);
@@ -64,12 +65,21 @@ void StartupManager::loop()
 	int my = (m_screenHeight - 28 - 16) / 2;
     m_layerMouse->setPosition(mx, my);
 
+    int count = 0;
     while (true)
     {
+        count ++;
+        char charScreenWidth[30];
+        intToCharArray(charScreenWidth, count);
+        m_layerManager->initWindow(m_layerWindow, m_layerWindow->getWidth(), m_layerWindow->getHeight(), "MKOS");
+        printString(m_layerWindow->getBuffer(), m_layerWindow->getWidth(), 8, 30, COL000000, charScreenWidth);
+        m_layerManager->repaint(m_layerWindow->getX() + 8, m_layerWindow->getY() + 30, 50, 16);
+
 		asmCli();
 		if (InterruptionBuffer::getInterruptionBuffer()->isInterruptionBufferEmpty()) 
         {
-			asmStiHlt();
+//			asmStiHlt();
+			asmSti();
 		} else 
         {
 			int intData = InterruptionBuffer::getInterruptionBuffer()->getInterruptionBufferData();
