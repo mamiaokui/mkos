@@ -27,3 +27,11 @@ Timer* Timer::getTimer()
     }
     return m_timer;
 }
+
+int count = 0;
+void int20Handler(int* arg)
+{
+	asmOut8(PIC0_OCW2, 0x60); 
+    count ++;
+	return;
+}

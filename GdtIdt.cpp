@@ -4,6 +4,7 @@
 #include "PaintPack.h"
 #include "Utils.h"
 #include "InterruptionBuffer.h"
+#include "Timer.h"
 
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight)
 {
@@ -82,10 +83,3 @@ void int2cHandler(int* arg)
 	return;
 }
 
-int count = 0;
-void int20Handler(int* arg)
-{
-	asmOut8(PIC0_OCW2, 0x60); 
-    count ++;
-	return;
-}

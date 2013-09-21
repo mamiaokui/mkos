@@ -1,3 +1,5 @@
+#ifndef Timer_h
+#define Timer_h
 class Timer
 {
 private: 
@@ -7,3 +9,7 @@ public:
     static Timer* getTimer();
 
 };
+extern "C" void int20Handler(int* arg);
+extern "C" void asmInt20Handler(void);
+
+#endif
