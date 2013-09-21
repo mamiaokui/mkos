@@ -12,51 +12,27 @@
 
 void StartupManager::init()
 {
-    initGdtIdt();
-    initPic();
-	asmSti(); 
-	asmOut8(PIC0_IMR, 0xf8); 
-	asmOut8(PIC1_IMR, 0xef); 
+    initGdtIdtInterruption();
     Timer::getTimer();
-    KeyBoardMouseHandler::getHandler()->initKeyboard();
 	initPalette();     
-
-
     m_layerManager = LayerManager::getLayerManager();
     m_screenWidth = m_layerManager->getScreenWidth();
     m_screenHeight = m_layerManager->getScreenHeight();
-
     m_layerBackground = m_layerManager->generateLayer(m_layerManager->getScreenWidth(), m_layerManager->getScreenHeight());
     initScreen(m_layerBackground->getBuffer(), m_screenWidth, m_screenHeight);
-
-
-    
-    char charScreenWidth[30];
-    extern MemoryManager* globalMemoryManager;
-    int memory = globalMemoryManager->getMemorySize();
-
-    intToCharArray(charScreenWidth, memory);
-    const char* screenWidthStr = "memory(MB) = ";
-    char result[30];
-    stringcat(screenWidthStr, charScreenWidth, result);
-
-    printString(m_layerBackground->getBuffer(), m_screenWidth, 8, 8, COL000000, result);
-
+    reportMemory();
     m_layerManager->changeZOrderTop(m_layerBackground);
-
-    unsigned char mouseCursorImage[256];
-
-    initMouseCursor(mouseCursorImage);
     m_layerMouse = m_layerManager->generateLayer(16, 16);
-    paintBlock(m_layerMouse->getBuffer(), 16, 16, 16, 0, 0, mouseCursorImage);
+    KeyBoardMouseHandler::getHandler()->initKeyboard();
+    KeyBoardMouseHandler::getHandler()->enableMouse();
+    KeyBoardMouseHandler::getHandler()->initMouseCursorImage(m_layerMouse->getBuffer());
 
-    Layer* layerWindow = m_layerManager->generateWindow(160, 68, "MKOS");
-    m_layerWindow = layerWindow;
-    m_layerManager->changeZOrderTop(layerWindow);
-    layerWindow->setPosition(30, 30);
+    m_layerWindow = m_layerManager->generateWindow(160, 68, "MKOS");
+    m_layerManager->changeZOrderTop(m_layerWindow);
+    m_layerWindow->setPosition(30, 30);
     m_layerManager->changeZOrderTop(m_layerMouse);
 
-    KeyBoardMouseHandler::getHandler()->enableMouse();
+
 }
 
 void StartupManager::loop()
@@ -125,4 +101,17 @@ void StartupManager::loop()
             }
 		}
     }
+}
+
+void StartupManager::reportMemory()
+{
+    char charMemory[30];
+    extern MemoryManager* globalMemoryManager;
+    int memory = globalMemoryManager->getMemorySize();
+
+    intToCharArray(charMemory, memory);
+    const char* charMemoryPreffix = "memory(MB) = ";
+    char result[30];
+    stringcat(charMemoryPreffix, charMemory, result);
+    printString(m_layerBackground->getBuffer(), m_screenWidth, 8, 8, COL000000, result);
 }

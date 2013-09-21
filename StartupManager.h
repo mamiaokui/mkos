@@ -14,7 +14,7 @@ private:
     LayerManager* m_layerManager;
 public:
     void init();
-
+    void reportMemory();
     void loop();
 };
 #endif

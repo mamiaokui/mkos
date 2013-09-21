@@ -54,14 +54,14 @@ public:
     static LayerManager* getLayerManager();
     void init(unsigned char* vram, int screenWidth, int screenHeight);
     Layer* generateLayer(int width, int height);
-    Layer* generateWindow(int width, int height, char* prompt);
+    Layer* generateWindow(int width, int height, const char* prompt);
     void changeZOrderTop(Layer* layer);
     void repaint(int x, int y, int width, int height);
     bool rectClip(int a[4], int b[4]);
     void moveLayer(Layer* layer, int x, int y);
     int min(int a, int b) {return (a < b)?a:b;}
     int max(int a, int b) {return (a > b)?a:b;}
-    void initWindow(Layer* layer, int width, int height, char*prompt);
+    void initWindow(Layer* layer, int width, int height, const char*prompt);
     int getScreenWidth() {return m_screenWidth;}
     int getScreenHeight() {return m_screenHeight;}
 };

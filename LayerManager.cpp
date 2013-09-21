@@ -143,7 +143,7 @@ Layer* LayerManager::generateLayer(int width, int height)
     return 0;
 }
 
-void LayerManager::initWindow(Layer* layer, int width, int height, char* prompt)
+void LayerManager::initWindow(Layer* layer, int width, int height, const char* prompt)
 {
     	static char closebtn[14][17] = {
 		"OOOOOOOOOOOOOOO@",
@@ -192,7 +192,7 @@ void LayerManager::initWindow(Layer* layer, int width, int height, char* prompt)
 	}
 }
 
-Layer* LayerManager::generateWindow(int width, int height, char* prompt)
+Layer* LayerManager::generateWindow(int width, int height, const char* prompt)
 {
 #ifndef MKDEBUG
     Layer* layer = generateLayer(width, height);

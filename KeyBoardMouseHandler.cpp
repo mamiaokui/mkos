@@ -1,6 +1,7 @@
 #include "KeyBoardMouseHandler.h"
 #include "MemoryManager.h"
 #include "AsmTools.h"
+#include "PaintPack.h"
 #define PORT_KEYDAT				0x0060
 #define PORT_KEYSTA				0x0064
 #define PORT_KEYCMD				0x0064
@@ -114,4 +115,11 @@ void KeyBoardMouseHandler::enableMouse(void)
 bool KeyBoardMouseHandler::receiveMouseInterruption(int data)
 {
     return m_mouseDataDecoder.receiveMouseInterruption(data);
+}
+
+void KeyBoardMouseHandler::initMouseCursorImage(unsigned char* layerBuffer)
+{
+    unsigned char mouseCursorImage[256];
+    initMouseCursor(mouseCursorImage);
+    paintBlock(layerBuffer, 16, 16, 16, 0, 0, mouseCursorImage);
 }

@@ -21,6 +21,7 @@ public:
     void enableMouse(void);
     bool receiveMouseInterruption(int data);
     int* getMouseData() {return m_mouseDataDecoder.getMouseData();}
+    void initMouseCursorImage(unsigned char*);
 private:
     MouseDataDecoder m_mouseDataDecoder;
     static KeyBoardMouseHandler* m_handler;

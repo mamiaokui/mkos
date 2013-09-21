@@ -47,7 +47,7 @@ void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int acc
 	idti->offset_high  = (offset >> 16) & 0xffff;
 }
 
-void initGdtIdt()
+void initGdtIdtInterruption()
 {
 	SegmentDescriptionItem* gdt = (SegmentDescriptionItem*) 0x10000;
 	InteruptionDescriptionItem* idt = (InteruptionDescriptionItem*) 0x0020000;
@@ -69,6 +69,11 @@ void initGdtIdt()
 	setIDTI(idt + 0x2c, (int) asmInt2cHandler-0x200000, 2 * 8, AR_INTGATE32);
 
 	asmLoadIDTR(0x7ff, (int)idt);
+
+    initPic();
+	asmSti(); 
+	asmOut8(PIC0_IMR, 0xf8); 
+	asmOut8(PIC1_IMR, 0xef); 
 	return;
 }
 

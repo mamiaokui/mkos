@@ -11,7 +11,7 @@ typedef struct {
     char dw_count, access_right;
     short offset_high;
 } InteruptionDescriptionItem;
-void initGdtIdt();
+void initGdtIdtInterruption();
 
 //set Global Segment Description Table Item
 void setGDTI(SegmentDescriptionItem* gdti, unsigned int segmentSize, int base, int acessRight);
