@@ -18,11 +18,13 @@
         GLOBAL  asmInt21Handler
         GLOBAL  asmInt27Handler
         GLOBAL  asmInt2cHandler
+        GLOBAL  asmInt20Handler
         GLOBAL  globalString
         GLOBAL  asmSti
         EXTERN  int21Handler
         EXTERN  int27Handler
         EXTERN  int2cHandler
+        EXTERN  int20Handler
 
 
 
@@ -150,6 +152,22 @@ asmInt2cHandler:
 		MOV		DS,AX
 		MOV		ES,AX
 		CALL	int2cHandler
+		POP		EAX
+		POPAD
+		POP		DS
+		POP		ES
+		IRETD
+
+asmInt20Handler:
+        PUSH	ES
+		PUSH	DS
+		PUSHAD
+		MOV		EAX,ESP
+		PUSH	EAX
+		MOV		AX,SS
+		MOV		DS,AX
+		MOV		ES,AX
+		CALL	int20Handler
 		POP		EAX
 		POPAD
 		POP		DS

@@ -25,5 +25,6 @@ extern "C" void asmInt27Handler(void);
 
 extern "C" void int2cHandler(int* arg);
 extern "C" void asmInt2cHandler(void);
+extern "C" void asmInt20Handler(void);
 
 #endif
