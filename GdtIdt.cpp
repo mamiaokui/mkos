@@ -85,8 +85,7 @@ void int2cHandler(int* arg)
 int count = 0;
 void int20Handler(int* arg)
 {
+	asmOut8(PIC0_OCW2, 0x60); 
     count ++;
-	InterruptionBuffer::getInterruptionBuffer()->inputInterruptionBuffer(33 + 256);
-	asmOut8(PIC0_OCW2, 0x67); 
 	return;
 }

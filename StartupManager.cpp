@@ -20,7 +20,7 @@ void StartupManager::init()
     initGdtIdt();
     initPic();
 	asmSti(); 
-	asmOut8(PIC0_IMR, 0xf9); 
+	asmOut8(PIC0_IMR, 0xf8); 
 	asmOut8(PIC1_IMR, 0xef); 
     Timer::getTimer();
 	initKeyboard();
