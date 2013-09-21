@@ -10,7 +10,6 @@ extern "C" int asmLoadEflags(void);
 extern "C" void asmStoreEflags(int eflags);
 extern "C" int asmLoadCr0(void);
 extern "C" void asmStoreCr0(int cr0);
-extern "C" void asmLog(int value);
 extern "C" void asmLoadGDTR(int size, int address);
 extern "C" void asmLoadIDTR(int size, int address);
 extern "C" void asmSti();

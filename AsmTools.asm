@@ -12,7 +12,6 @@
         GLOBAL  asmStoreEflags
         GLOBAL  asmLoadCr0
         GLOBAL  asmStoreCr0
-        GLOBAL  asmLog
         GLOBAL  asmLoadGDTR
         GLOBAL  asmLoadIDTR
         GLOBAL  asmInt21Handler
@@ -86,12 +85,6 @@ asmStoreCr0:
 		MOV		EAX,[ESP+4]
         MOV     CR0, EAX
 		RET
-
-
-asmLog: ;void asmStoreEflags(int eflags);
-        MOV		EAX, [ESP+4]
-        MOV [0x8888], EAX
-        jmp LBhlt
 
 asmLoadGDTR:
         MOV		AX,[ESP+4]		

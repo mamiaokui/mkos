@@ -28,7 +28,7 @@ void StartupManager::init()
 
 
     m_layerManager = LayerManager::getLayerManager();
-    m_layerBackground = m_layerManager->generateLayer(m_screenWidth, m_screenHeight);
+    m_layerBackground = m_layerManager->generateLayer(m_layerManager->getScreenWidth(), m_layerManager->getScreenHeight());
     initScreen(m_layerBackground->getBuffer(), m_screenWidth, m_screenHeight);
 
 

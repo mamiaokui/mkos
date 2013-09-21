@@ -25,9 +25,6 @@ PaintPack.o: PaintPack.h PaintPack.cpp
 Utils.o: Utils.h Utils.cpp
 	gcc -c -O0 -m32 -fno-stack-protector Utils.cpp -o Utils.o
 
-Platform.o: Platform.h Platform.cpp
-	gcc -c -O0 -m32 -fno-stack-protector Platform.cpp -o Platform.o
-
 InterruptionBuffer.o: InterruptionBuffer.h InterruptionBuffer.cpp
 	gcc -c -O0 -m32 -fno-stack-protector InterruptionBuffer.cpp -o InterruptionBuffer.o
 
@@ -50,8 +47,8 @@ KeyBoardMouseHandler.o: KeyBoardMouseHandler.h KeyBoardMouseHandler.cpp
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmTools.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o
-	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmTools.o FontData.o GdtIdt.o PaintPack.o Utils.o Platform.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o -o BootProgramLink.o
+BootProgramLink.o: AsmTools.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o
+	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmTools.o FontData.o GdtIdt.o PaintPack.o Utils.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmToCpp.o BootProgramLink.o RESB.o
 	cat IPL.o AsmToCpp.o BootProgramLink.o RESB.o > OS.img

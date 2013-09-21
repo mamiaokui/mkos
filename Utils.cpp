@@ -1,9 +1,6 @@
 #include "Utils.h"
 #include "Platform.h"
 #include "PaintPack.h"
-int enableLog;
-int log_1;
-int log_2;
 void intToCharArray(char* dest, int number)
 {
     int index = 0;

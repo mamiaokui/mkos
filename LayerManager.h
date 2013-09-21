@@ -3,6 +3,16 @@
 #define MAX_LAYERS 100
 #define LAYER_INUSE 1
 class LayerManager;
+
+#define BOOTINFO_ADDRESS 0x0ff0 //look for the head of AsmHead.asm for reason.
+typedef struct {
+    int m_vmode;
+    int m_screenWidth;
+    int m_screenHeight;
+    unsigned char* m_vram;
+} BootInfo;
+
+
 class Layer
 {
 private:
@@ -52,6 +62,8 @@ public:
     int min(int a, int b) {return (a < b)?a:b;}
     int max(int a, int b) {return (a > b)?a:b;}
     void initWindow(Layer* layer, int width, int height, char*prompt);
+    int getScreenWidth() {return m_screenWidth;}
+    int getScreenHeight() {return m_screenHeight;}
 };
 
 
