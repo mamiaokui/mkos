@@ -9,7 +9,6 @@
 #include "MemoryManager.h"
 #include "Timer.h"
 
-
 void StartupManager::init()
 {
     initGdtIdtInterruption();
@@ -23,81 +22,36 @@ void StartupManager::init()
     reportMemory();
     m_layerManager->changeZOrderTop(m_layerBackground);
     m_layerMouse = m_layerManager->generateLayer(16, 16);
-    KeyBoardMouseHandler::getHandler()->initKeyboard();
-    KeyBoardMouseHandler::getHandler()->enableMouse();
-    KeyBoardMouseHandler::getHandler()->initMouseCursorImage(m_layerMouse->getBuffer());
-
+    m_keyboardMouseHandler = KeyBoardMouseHandler::getHandler();
+    m_keyboardMouseHandler->init(m_layerMouse);
     m_layerWindow = m_layerManager->generateWindow(160, 68, "MKOS");
+    m_layerManager->moveLayerToMiddle(m_layerWindow);
     m_layerManager->changeZOrderTop(m_layerWindow);
-    m_layerWindow->setPosition(30, 30);
+    m_keyboardMouseHandler->moveLayerToMiddle();
     m_layerManager->changeZOrderTop(m_layerMouse);
-
-
 }
 
 void StartupManager::loop()
 {
-	int mx = (m_screenWidth - 16) / 2;
-	int my = (m_screenHeight - 28 - 16) / 2;
-    m_layerMouse->setPosition(mx, my);
-
-    extern int count;
     while (true)
     {
-        char charScreenWidth[30];
-        intToCharArray(charScreenWidth, count);
-        m_layerManager->initWindow(m_layerWindow, m_layerWindow->getWidth(), m_layerWindow->getHeight(), "MKOS");
-        printString(m_layerWindow->getBuffer(), m_layerWindow->getWidth(), 8, 30, COL000000, charScreenWidth);
-        m_layerManager->repaint(m_layerWindow->getX() + 8, m_layerWindow->getY() + 30, 50, 16);
-
+        countNumber();
 		asmCli();
 		if (InterruptionBuffer::getInterruptionBuffer()->isInterruptionBufferEmpty()) 
         {
 			asmStiHlt();
-		} else 
+		} 
+        else 
         {
 			int intData = InterruptionBuffer::getInterruptionBuffer()->getInterruptionBufferData();
 			asmSti();
             if (intData < 512)
             {
-                char b[10];
-                intToCharArray(b, intData);
-                initScreen(m_layerBackground->getBuffer(), m_screenWidth, m_screenHeight);
-                printString(m_layerBackground->getBuffer(), m_screenWidth, 8, 8, COLFFFFFF, b);
-                m_layerManager->repaint(0, 0, m_screenWidth, m_screenHeight);
+                logInt(intData);
             }
-            else if (intData >= 512)
+            else if (intData < 1024)
             {
-                bool output =  KeyBoardMouseHandler::getHandler()->receiveMouseInterruption(intData - 512);
-                if (output)
-                {
-                    int* outputData = KeyBoardMouseHandler::getHandler()->getMouseData();
-
-                    mx += outputData[1];
-                    //fix me. don't know the true reason. mouse always receive large negative y move.
-                    //temp fix.
-                    if (outputData[2] < -200)
-                    {
-                        outputData[2] = 0;
-                    }
-                    my += outputData[2];
-                    if (mx < 0)
-                    {
-                        mx = 0;
-                    }
-                    if (my < 0)
-                    {
-                        my = 0;
-                    }
-                    if (mx > m_screenWidth - 16)
-                        mx = m_screenWidth -16;
-
-                    if (my > m_screenHeight - 16)
-                        my = m_screenHeight -16;
-
-                    m_layerMouse->setPosition(mx, my);
-
-                }
+                m_keyboardMouseHandler->handleMouseInput(intData);
             }
 		}
     }
@@ -114,4 +68,25 @@ void StartupManager::reportMemory()
     char result[30];
     stringcat(charMemoryPreffix, charMemory, result);
     printString(m_layerBackground->getBuffer(), m_screenWidth, 8, 8, COL000000, result);
+}
+
+void StartupManager::countNumber()
+{
+    char charScreenWidth[30];
+    extern int count;
+    intToCharArray(charScreenWidth, count);
+    m_layerManager->initWindow(m_layerWindow, m_layerWindow->getWidth(), m_layerWindow->getHeight(), "MKOS");
+    printString(m_layerWindow->getBuffer(), m_layerWindow->getWidth(), 8, 30, COL000000, charScreenWidth);
+    m_layerManager->repaint(m_layerWindow->getX() + 8, m_layerWindow->getY() + 30, 50, 16);
+}
+
+
+void StartupManager::logInt(int intData)
+{
+    char b[10];
+    intToCharArray(b, intData);
+    initScreen(m_layerBackground->getBuffer(), m_screenWidth, m_screenHeight);
+    printString(m_layerBackground->getBuffer(), m_screenWidth, 8, 8, COLFFFFFF, b);
+    m_layerManager->repaint(0, 0, m_screenWidth, m_screenHeight);
+ 
 }

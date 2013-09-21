@@ -2,6 +2,7 @@
 #include "MemoryManager.h"
 #include "AsmTools.h"
 #include "PaintPack.h"
+#include "LayerManager.h"
 #define PORT_KEYDAT				0x0060
 #define PORT_KEYSTA				0x0064
 #define PORT_KEYCMD				0x0064
@@ -122,4 +123,54 @@ void KeyBoardMouseHandler::initMouseCursorImage(unsigned char* layerBuffer)
     unsigned char mouseCursorImage[256];
     initMouseCursor(mouseCursorImage);
     paintBlock(layerBuffer, 16, 16, 16, 0, 0, mouseCursorImage);
+}
+
+void KeyBoardMouseHandler::init(Layer* layerMouse)
+{
+    m_layerMouse = layerMouse;
+    initKeyboard();
+    enableMouse();
+    initMouseCursorImage(m_layerMouse->getBuffer());
+}
+
+void KeyBoardMouseHandler::moveLayerToMiddle()
+{
+    LayerManager::getLayerManager()->moveLayerToMiddle(m_layerMouse);
+    m_mouseX = m_layerMouse->getX();
+    m_mouseY = m_layerMouse->getY();
+}
+
+void KeyBoardMouseHandler::handleMouseInput(int data)
+{
+    bool output =  receiveMouseInterruption(data - 512);
+    if (output)
+    {
+        int* outputData = getMouseData();
+
+        m_mouseX += outputData[1];
+        //fix me. don't know the true reason. mouse always receive large negative y move.
+        //temp fix.
+        if (outputData[2] < -200)
+        {
+            outputData[2] = 0;
+        }
+        m_mouseY += outputData[2];
+        if (m_mouseX < 0)
+        {
+            m_mouseX = 0;
+        }
+        if (m_mouseY < 0)
+        {
+            m_mouseY = 0;
+        }
+        int screenWidth = LayerManager::getLayerManager()->getScreenWidth();
+        int screenHeight = LayerManager::getLayerManager()->getScreenHeight();
+        if (m_mouseX > screenWidth - 16)
+            m_mouseX = screenWidth -16;
+
+        if (m_mouseY > screenHeight - 16)
+            m_mouseY = screenHeight -16;
+
+        m_layerMouse->setPosition(m_mouseX, m_mouseY);
+    }
 }

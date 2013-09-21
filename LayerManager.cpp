@@ -251,13 +251,11 @@ void LayerManager::repaint(int xPos, int yPos, int width, int height)
         }
     }
 
-
     for ( int y = yPos; y < yPos + height; y++)
     {
         for (int x = xPos; x < xPos + width; x++)
             m_vram[y * m_screenWidth + x] = m_vramTemp[y * m_screenWidth + x];
     }
-
 }
 
 bool LayerManager::rectClip(int a[4], int b[4])
@@ -276,4 +274,11 @@ bool LayerManager::rectClip(int a[4], int b[4])
     a[2] = right - left;
     a[3] = bottom - top;
     return true;
+}
+
+void LayerManager::moveLayerToMiddle(Layer* layer)
+{
+	int mx = (m_screenWidth - layer->getWidth()) / 2;
+	int my = (m_screenHeight - 28 - layer->getHeight()) / 2;
+    layer->setPosition(mx, my);
 }

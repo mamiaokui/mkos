@@ -64,6 +64,7 @@ public:
     void initWindow(Layer* layer, int width, int height, const char*prompt);
     int getScreenWidth() {return m_screenWidth;}
     int getScreenHeight() {return m_screenHeight;}
+    void moveLayerToMiddle(Layer* layer);
 };
 
 
