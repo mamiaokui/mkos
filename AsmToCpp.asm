@@ -26,16 +26,11 @@ IDT     equ     0x20000
 ;;; ASMHEAD_POS	equ		0x00008200  ;for AsmHead
 BOOTPROGRAM_POS	        equ		0x00100000	;for BootProgram
 BOOTPROGRAM_POS_RELLOC	equ		0x00200000	;for BootProgram
-        
-
-
-        
 
 org	0x8200
 	jmp	LABEL_BEGIN
 
 [SECTION .gdt]
-
 ;                                  段基址,                     段界限,              属性
 LABEL_GDT:	        	Descriptor	       0,                  0,                 0   	; 空描述符
 LABEL_DESC_CODE32:  	Descriptor	       0,         0x10000000,      DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
@@ -62,8 +57,6 @@ memset0:
 		sub		ecx,1
 		JNZ		memset0		
 		ret
-
-        
         
 memcpy16:
 		mov		eax,[esi]
@@ -80,27 +73,15 @@ LABEL_BEGIN:
 		mov		WORD [SCRNY],200
 		mov		DWORD [VRAM],0x000a0000
         
-        mov edi, 0xa0000
-        mov ecx, 320*200/4
-        call memset0
-
-        
         mov		AL,0x13	
 		mov		AH,0x00
 		INT		0x10
 
-        mov edi, 0xa0000
-        mov ecx, 320*200/4
-        call memset0
-
-
-
 ; for bootprogram
-
 		mov		ebx, bootprogram
         mov     esi, ebx
         mov     edi, BOOTPROGRAM_POS
-        mov     ecx, 1024*1024*5/4
+        mov     ecx, 0x100000/4 ;bootprogram must not larger than 0x100000, check.sh will check this
         CALL    memcpy16
 
 
