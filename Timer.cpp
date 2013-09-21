@@ -4,7 +4,6 @@
 #include "Timer.h"
 #include "AsmTools.h"
 #include "GdtIdt.h"
-#include "Platform.h"
 #include "MemoryManager.h"
 #include "InterruptionBuffer.h"
 Timer* Timer::m_timer = 0;

@@ -1,6 +1,5 @@
 #include "PaintPack.h"
 #include "AsmTools.h"
-#include "Platform.h"
 #include "Utils.h"
 
 unsigned char table_rgb[16 * 3] = {

@@ -2,7 +2,6 @@
 #include "AsmTools.h"
 #include "PaintPack.h"
 #include "GdtIdt.h"
-#include "Platform.h"
 #include "Utils.h"
 #include "InterruptionBuffer.h"
 #include "LayerManager.h"

@@ -1,5 +1,4 @@
 #include "Utils.h"
-#include "Platform.h"
 #include "PaintPack.h"
 void intToCharArray(char* dest, int number)
 {

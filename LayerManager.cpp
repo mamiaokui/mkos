@@ -6,7 +6,6 @@
 using namespace std;
 unsigned char* globalVram;
 #endif
-#include "Platform.h"
 #include "PaintPack.h"
 LayerManager* LayerManager::m_layerManager = 0;
 Layer::Layer()

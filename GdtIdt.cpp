@@ -1,6 +1,5 @@
 #include "AsmTools.h"
 #include "GdtIdt.h"
-#include "Platform.h"
 #include "PaintPack.h"
 #include "Utils.h"
 #include "InterruptionBuffer.h"
