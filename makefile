@@ -16,34 +16,8 @@ AsmTools.o: AsmTools.asm
 FontData.o: FontData.asm
 	nasm  -f elf FontData.asm -o FontData.o
 
-GdtIdt.o: GdtIdt.h GdtIdt.cpp
-	gcc -c -O0 -m32 -fno-stack-protector GdtIdt.cpp -o GdtIdt.o
-
-PaintPack.o: PaintPack.h PaintPack.cpp
-	gcc -c -O0 -m32 -fno-stack-protector PaintPack.cpp -o PaintPack.o
-
-Utils.o: Utils.h Utils.cpp
-	gcc -c -O0 -m32 -fno-stack-protector Utils.cpp -o Utils.o
-
-InterruptionBuffer.o: InterruptionBuffer.h InterruptionBuffer.cpp
-	gcc -c -O0 -m32 -fno-stack-protector InterruptionBuffer.cpp -o InterruptionBuffer.o
-
-MemoryManager.o: MemoryManager.h MemoryManager.cpp
-	gcc -c -O0 -m32 -fno-stack-protector MemoryManager.cpp -o MemoryManager.o
-
-LayerManager.o: LayerManager.h LayerManager.cpp
-	gcc -c -O0 -m32 -fno-stack-protector LayerManager.cpp -o LayerManager.o
-
-StartupManager.o: StartupManager.h StartupManager.cpp
-	gcc -c -O0 -m32 -fno-stack-protector StartupManager.cpp -o StartupManager.o
-
-Timer.o: Timer.h Timer.cpp
-	gcc -c -O0 -m32 -fno-stack-protector Timer.cpp -o Timer.o
-
-KeyBoardMouseHandler.o: KeyBoardMouseHandler.h KeyBoardMouseHandler.cpp
-	gcc -c -O0 -m32 -fno-stack-protector KeyBoardMouseHandler.cpp -o KeyBoardMouseHandler.o
-
-
+%.o: %.cpp
+	gcc -c -O0 -m32 -fno-stack-protector $< -o $@
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
