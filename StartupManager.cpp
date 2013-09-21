@@ -80,8 +80,7 @@ void StartupManager::loop()
 		asmCli();
 		if (InterruptionBuffer::getInterruptionBuffer()->isInterruptionBufferEmpty()) 
         {
-//			asmStiHlt();
-			asmSti();
+			asmStiHlt();
 		} else 
         {
 			int intData = InterruptionBuffer::getInterruptionBuffer()->getInterruptionBufferData();
