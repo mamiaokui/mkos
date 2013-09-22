@@ -21,6 +21,7 @@ public:
     void reportMemory();
     void loop();
     void countNumber();
-    void logInt(int intData);
+    void log(int intData);
+    void log(char charData);
 };
 #endif
