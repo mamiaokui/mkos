@@ -34,6 +34,7 @@ void StartupManager::init()
 
 void StartupManager::loop()
 {
+    TimerManager::getTimerManager()->setTimer(0, 100, 12345);
     while (true)
     {
         countNumber();
@@ -53,6 +54,10 @@ void StartupManager::loop()
             else if (intData < 1024)
             {
                 m_keyboardMouseHandler->handleMouseInput(intData);
+            }
+            else if (intData < 1536)
+            {
+                TimerManager::getTimerManager()->tick();
             }
 		}
     }
@@ -78,7 +83,7 @@ void StartupManager::countNumber()
     intToCharArray(charScreenWidth, count);
     m_layerManager->initWindow(m_layerWindow, m_layerWindow->getWidth(), m_layerWindow->getHeight(), "MKOS");
     printString(m_layerWindow->getBuffer(), m_layerWindow->getWidth(), 8, 30, COL000000, charScreenWidth);
-    m_layerManager->repaint(m_layerWindow->getX() + 8, m_layerWindow->getY() + 30, 50, 16);
+    m_layerManager->repaint(m_layerWindow->getX() + 8, m_layerWindow->getY() + 30, 80, 16);
 }
 
 

@@ -185,7 +185,7 @@ void int21Handler(int* arg)
     int data;
 	data = asmIn8(PORT_KEYBOARD);
     //use the same interruption buffer, so add one number to change the level.
-	InterruptionBuffer::getInterruptionBuffer()->inputInterruptionBuffer(data + 256);
+	InterruptionBuffer::getInterruptionBuffer()->inputInterruptionBuffer(data);
 }
 
 

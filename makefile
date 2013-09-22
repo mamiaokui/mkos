@@ -7,9 +7,6 @@ AsmToCpp.o: AsmToCpp.asm
 RESB.o: RESB.asm
 	nasm RESB.asm -o RESB.o
 
-BootProgram.o: BootProgram.cpp
-	gcc -c -O0 -m32 -fno-stack-protector BootProgram.cpp -o BootProgram.o
-
 AsmTools.o: AsmTools.asm
 	nasm -f elf  AsmTools.asm -o AsmTools.o
 
