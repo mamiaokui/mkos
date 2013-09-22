@@ -35,7 +35,6 @@ org	0x8200
 LABEL_GDT:	        	Descriptor	       0,                  0,                 0   	; 空描述符
 LABEL_DESC_CODE32:  	Descriptor	       0,         0x10000000,      DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
 LABEL_DESC_BOOTPROGRAM:	Descriptor	 BOOTPROGRAM_POS_RELLOC,     0x100000,      DA_C + DA_32	; 非一致代码段, 32  段界限为数据段地址跨度减1
-LABEL_DESC_VIDEO:   	Descriptor	 0xa0000,          320*200 -1,           DA_DRW	; 显存首地址
 ; GDT 结束
 
 GdtLen		equ	$ - LABEL_GDT	; GDT长度
@@ -45,7 +44,6 @@ GdtPtr		dw	GdtLen - 1	    ; GDT界限
 ; GDT 选择子
 SELECTOR_CODE_32		equ	LABEL_DESC_CODE32	- LABEL_GDT    ;代码段选择子
 SELECTOR_BOOTPROGRAM		equ	LABEL_DESC_BOOTPROGRAM	- LABEL_GDT    ;代码段选择子
-SelectorVideo		equ	LABEL_DESC_VIDEO	- LABEL_GDT    ;数据段选择子
 ; END of [SECTION .gdt]
 
 [SECTION .s16]
@@ -69,12 +67,12 @@ memcpy16:
 
 LABEL_BEGIN:
 		mov		BYTE [VMODE],8
-		mov		WORD [SCRNX],320
-		mov		WORD [SCRNY],200
-		mov		DWORD [VRAM],0x000a0000
+		mov		WORD [SCRNX],1024
+		mov		WORD [SCRNY],768
+		mov		DWORD [VRAM],0xfc000000
         
-        mov		AL,0x13	
-		mov		AH,0x00
+        mov		bx,0x4105	
+		mov		ax,0x4f02
 		INT		0x10
 
 ; for bootprogram
