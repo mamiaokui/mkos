@@ -21,8 +21,8 @@ FontData.o: FontData.asm
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
-BootProgramLink.o: AsmTools.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o
-	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmTools.o FontData.o GdtIdt.o PaintPack.o Utils.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o Timer.o KeyBoardMouseHandler.o -o BootProgramLink.o
+BootProgramLink.o: AsmTools.o BootProgram.o BootProgramStart.o FontData.o GdtIdt.o PaintPack.o Utils.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o KeyBoardMouseHandler.o TimerManager.o
+	ld -m elf_i386 -Ttext 0x200000  BootProgramStart.o BootProgram.o AsmTools.o FontData.o GdtIdt.o PaintPack.o Utils.o InterruptionBuffer.o MemoryManager.o LayerManager.o StartupManager.o KeyBoardMouseHandler.o TimerManager.o -o BootProgramLink.o
 
 OS.img: IPL.o AsmToCpp.o BootProgramLink.o RESB.o
 	cat IPL.o AsmToCpp.o BootProgramLink.o RESB.o > OS.img

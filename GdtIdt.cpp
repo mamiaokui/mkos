@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "InterruptionBuffer.h"
 #include "KeyBoardMouseHandler.h"
-#include "Timer.h"
+#include "TimerManager.h"
 
 void initPic(void)
 {

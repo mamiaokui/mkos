@@ -7,12 +7,12 @@
 #include "LayerManager.h"
 #include "KeyBoardMouseHandler.h"
 #include "MemoryManager.h"
-#include "Timer.h"
+#include "TimerManager.h"
 
 void StartupManager::init()
 {
     initGdtIdtInterruption();
-    Timer::getTimer();
+    TimerManager::getTimerManager();
 	initPalette();     
     m_layerManager = LayerManager::getLayerManager();
     m_screenWidth = m_layerManager->getScreenWidth();
