@@ -30,6 +30,7 @@ void TimerManager::setTimer(TimerCallback* callback, int timeout, int id)
     {
         if (m_timerContainer[i].m_flags == 0)
         {
+
             m_timerContainer[i].m_flags = 1;
             m_timerContainer[i].m_ID = id;
             m_timerContainer[i].m_fireTime = timeout + m_currentTime;
@@ -44,8 +45,10 @@ void TimerManager::setTimer(TimerCallback* callback, int timeout, int id)
                 {
                     m_sortedTimers[j + 1] = m_sortedTimers[j];
                 }
+                else
+                    break;
             }
-            m_sortedTimers[j + 1] = m_timerContainer + i;
+            m_sortedTimers[j + 1] = &m_timerContainer[i];
             m_timerCount++;
             break;
         }
@@ -76,17 +79,15 @@ void TimerManager::tick()
     {
         return;
     }
-
     if(m_sortedTimers[0]->m_fireTime == m_currentTime)
     {
-        count = 100;
         m_sortedTimers[0]->m_timerCallback->callback(m_sortedTimers[0]->m_ID);
         m_sortedTimers[0]->init();
-        m_timerCount--;
         for (int i = 1; i < m_timerCount; i++)
         {
             m_sortedTimers[i - 1] = m_sortedTimers[i];
         }
+        m_timerCount--;
     }
 }
 

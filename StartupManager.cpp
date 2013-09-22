@@ -34,7 +34,11 @@ void StartupManager::init()
 
 void StartupManager::loop()
 {
-    TimerManager::getTimerManager()->setTimer(0, 100, 12345);
+    TimerManager::getTimerManager()->setTimer(0, 300, 123);
+    TimerManager::getTimerManager()->setTimer(0, 200, 12);
+    TimerManager::getTimerManager()->setTimer(0, 400, 1234);
+    TimerManager::getTimerManager()->setTimer(0, 500, 12345);
+    TimerManager::getTimerManager()->setTimer(0, 100, 1);
     while (true)
     {
         countNumber();
