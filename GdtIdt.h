@@ -38,13 +38,9 @@ void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int acc
 void initPic();
 
 
-extern "C" void int21Handler(int* arg);
-extern "C" void asmInt21Handler(void);
 
 extern "C" void int27Handler(int* arg);
 extern "C" void asmInt27Handler(void);
 
-extern "C" void int2cHandler(int* arg);
-extern "C" void asmInt2cHandler(void);
 
 #endif

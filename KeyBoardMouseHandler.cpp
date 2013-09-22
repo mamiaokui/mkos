@@ -3,6 +3,8 @@
 #include "AsmTools.h"
 #include "PaintPack.h"
 #include "LayerManager.h"
+#include "GdtIdt.h"
+#include "InterruptionBuffer.h"
 #define PORT_KEYDAT				0x0060
 #define PORT_KEYSTA				0x0064
 #define PORT_KEYCMD				0x0064
@@ -174,3 +176,27 @@ void KeyBoardMouseHandler::handleMouseInput(int data)
         m_layerMouse->setPosition(m_mouseX, m_mouseY);
     }
 }
+
+#define PORT_KEYBOARD		0x0060
+
+void int21Handler(int* arg)
+{
+    asmOut8(PIC0_OCW2, 0x61);
+    int data;
+	data = asmIn8(PORT_KEYBOARD);
+    //use the same interruption buffer, so add one number to change the level.
+	InterruptionBuffer::getInterruptionBuffer()->inputInterruptionBuffer(data + 256);
+}
+
+
+void int2cHandler(int* arg)
+{
+	int data;
+	asmOut8(PIC1_OCW2, 0x64);
+	asmOut8(PIC0_OCW2, 0x62);
+	data = asmIn8(PORT_KEYBOARD);
+    //same as int21
+	InterruptionBuffer::getInterruptionBuffer()->inputInterruptionBuffer(data + 512);
+	return;
+}
+

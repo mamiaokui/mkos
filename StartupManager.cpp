@@ -29,6 +29,7 @@ void StartupManager::init()
     m_layerManager->changeZOrderTop(m_layerWindow);
     m_keyboardMouseHandler->moveLayerToMiddle();
     m_layerManager->changeZOrderTop(m_layerMouse);
+    m_interruptionBuffer = InterruptionBuffer::getInterruptionBuffer();
 }
 
 void StartupManager::loop()
@@ -37,13 +38,13 @@ void StartupManager::loop()
     {
         countNumber();
 		asmCli();
-		if (InterruptionBuffer::getInterruptionBuffer()->isInterruptionBufferEmpty()) 
+		if (m_interruptionBuffer->isInterruptionBufferEmpty()) 
         {
 			asmStiHlt();
 		} 
         else 
         {
-			int intData = InterruptionBuffer::getInterruptionBuffer()->getInterruptionBufferData();
+			int intData = m_interruptionBuffer->getInterruptionBufferData();
 			asmSti();
             if (intData < 512)
             {

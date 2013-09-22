@@ -4,6 +4,7 @@
 class Layer;
 class LayerManager;
 class KeyBoardMouseHandler;
+class InterruptionBuffer;
 class StartupManager
 {
 private:
@@ -14,6 +15,7 @@ private:
     Layer* m_layerWindow;
     LayerManager* m_layerManager;
     KeyBoardMouseHandler* m_keyboardMouseHandler;
+    InterruptionBuffer* m_interruptionBuffer;
 public:
     void init();
     void reportMemory();

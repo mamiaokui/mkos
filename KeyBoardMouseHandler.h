@@ -33,4 +33,10 @@ private:
     int m_mouseX;
     int m_mouseY;
 };
+
+extern "C" void int21Handler(int* arg);
+extern "C" void asmInt21Handler(void);
+extern "C" void int2cHandler(int* arg);
+extern "C" void asmInt2cHandler(void);
+
 #endif
