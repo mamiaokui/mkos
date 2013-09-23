@@ -20,10 +20,14 @@
         GLOBAL  asmInt20Handler
         GLOBAL  globalString
         GLOBAL  asmSti
+        GLOBAL  asmLoadTR
+        GLOBAL  asmTaskSwitch4
+        GLOBAL  asmAddCount
         EXTERN  int21Handler
         EXTERN  int27Handler
         EXTERN  int2cHandler
         EXTERN  int20Handler
+        EXTERN  count
 
 
 
@@ -171,6 +175,19 @@ asmInt20Handler:
 asmSti:
 		STI
 		RET
+
+asmLoadTR:
+        ltr [esp + 4]
+        ret
+
+asmTaskSwitch4:
+        jmp 4*8:0
+        ret
+
+asmAddCount:
+        mov eax, cs
+        mov [count], eax
+        ret
 
 
 [SECTION .data]

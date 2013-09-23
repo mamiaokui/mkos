@@ -11,6 +11,8 @@ typedef struct {
     char dw_count, access_right;
     short offset_high;
 } InteruptionDescriptionItem;
+
+#define GDT_ADDR 0x10000
 void initGdtIdtInterruption();
 
 //set Global Segment Description Table Item
@@ -20,6 +22,7 @@ void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int acc
 #define AR_DATA32_RW	0x4092
 #define AR_CODE32_ER	0x409a
 #define AR_INTGATE32	0x008e
+#define AR_TSS32		0x0089
 
 #define PIC0_ICW1		0x0020
 #define PIC0_OCW2		0x0020

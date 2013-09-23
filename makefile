@@ -14,7 +14,7 @@ FontData.o: FontData.asm
 	nasm  -f elf FontData.asm -o FontData.o
 
 %.o: %.cpp
-	gcc -c -O0 -m32 -fno-stack-protector $< -o $@
+	gcc -c -O0 -m32  $< -o $@
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o
 
@@ -36,4 +36,4 @@ run: clean all makefile
 	qemu -m 256 OS.img
 
 test: MemoryManager.cpp test.cpp LayerManager.cpp
-	g++ -g -O0  -DMKDEBUG=1 MemoryManager.cpp LayerManager.cpp test.cpp  -o test.o
+	g++ -g -O0 -DMKDEBUG=1  test.cpp  -o test.o

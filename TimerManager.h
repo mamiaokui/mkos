@@ -1,6 +1,6 @@
 #ifndef TimerManager_h
 #define TimerManager_h
-
+#include "AsmTools.h"
 #define TIMER_COUNT 100
 class TimerCallback
 {
@@ -9,6 +9,10 @@ public:
     {
         extern int count;
         count = id;
+        if (id == 123)
+        {
+            asmTaskSwitch4();
+        }
     }
 };
 

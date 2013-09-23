@@ -8,6 +8,14 @@
 #include "KeyBoardMouseHandler.h"
 #include "MemoryManager.h"
 #include "TimerManager.h"
+#include "TaskManager.h"
+extern "C" void task_b_main(void)
+{
+    for (;;)
+    {
+        asmHlt();
+    }
+}
 
 void StartupManager::init()
 {
@@ -30,6 +38,41 @@ void StartupManager::init()
     m_keyboardMouseHandler->moveLayerToMiddle();
     m_layerManager->changeZOrderTop(m_layerMouse);
     m_interruptionBuffer = InterruptionBuffer::getInterruptionBuffer();
+    
+    TaskManager taskManager;
+    TSS32* taska = taskManager.getTSS();
+    taska->ldtr = 0;
+    taska->iomap = 0x40000000;
+
+    TSS32* taskb = taskManager.getTSS();
+    taskb->ldtr = 0;
+    taskb->iomap = 0x40000000;
+
+    SegmentDescriptionItem* gdt = (SegmentDescriptionItem*)GDT_ADDR;
+	setGDTI(gdt + 3, 103, (int)taska, AR_TSS32);
+	setGDTI(gdt + 4, 103, (int)taskb, AR_TSS32);
+	asmLoadTR(3 * 8);
+    extern MemoryManager* globalMemoryManager;
+    int task_b_esp = globalMemoryManager->malloc(64*1024) + 64*1024;
+//	int task_b_esp = memman_alloc_4k(memman, 64 * 1024) + 64 * 1024;
+    void(*ptr)(void) = (void(*)())(int(&task_b_main) - 0x200000);
+	taskb->eip = int(ptr);
+	taskb->eflags = 0x00000202; /* IF = 1; */
+	taskb->eax = 0;
+	taskb->ecx = 0;
+	taskb->edx = 0;
+	taskb->ebx = 0;
+	taskb->esp = task_b_esp;
+	taskb->ebp = 0;
+	taskb->esi = 0;
+	taskb->edi = 0;
+	taskb->es = 0 * 8;
+	taskb->cs = 2 * 8;
+	taskb->ss = 0 * 8;
+	taskb->ds = 0 * 8;
+	taskb->fs = 0 * 8;
+	taskb->gs = 0 * 8;
+
 }
 
 void StartupManager::loop()

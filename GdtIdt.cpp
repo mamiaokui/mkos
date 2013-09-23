@@ -50,7 +50,7 @@ void setIDTI(InteruptionDescriptionItem *idti, int offset, int selector, int acc
 
 void initGdtIdtInterruption()
 {
-	SegmentDescriptionItem* gdt = (SegmentDescriptionItem*) 0x10000;
+	SegmentDescriptionItem* gdt = (SegmentDescriptionItem*) GDT_ADDR;
 	InteruptionDescriptionItem* idt = (InteruptionDescriptionItem*) 0x0020000;
 	int i;
     //forget the small three bits

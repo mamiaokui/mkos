@@ -1,7 +1,6 @@
+/*
 #include "MemoryManager.h"
 #include "LayerManager.h"
-#include "iostream"
-using namespace std;
 
 void foo(FreeItem& item)
 {
@@ -160,11 +159,15 @@ void test7()
         manager->rectClip(a, b);
         cout << a[0] <<' ' << a[1] <<' '<< a[2] <<' '<< a[3]<< endl;
 }
-
+*/
+void test8()
+{
+    int a = 1;
+}
 
 int main()
 {
-    test6();
-    test7();
-    //test5();
+    test8();
+    void(*ptr)() = test8;
+    ptr();
 }

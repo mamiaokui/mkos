@@ -13,5 +13,8 @@ extern "C" void asmStoreCr0(int cr0);
 extern "C" void asmLoadGDTR(int size, int address);
 extern "C" void asmLoadIDTR(int size, int address);
 extern "C" void asmSti();
+extern "C" void asmLoadTR(int);
+extern "C" void asmTaskSwitch4();
+extern "C" void asmAddCount();
 extern "C" char asmGlobalFont;
 #endif
