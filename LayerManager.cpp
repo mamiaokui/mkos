@@ -223,6 +223,14 @@ void LayerManager::changeZOrderTop(Layer* layer)
 
 void LayerManager::repaint(int xPos, int yPos, int width, int height)
 {
+    if (xPos < 0)
+        xPos = 0;
+    if (yPos < 0)
+        yPos = 0;
+    if (xPos + width > m_screenWidth)
+        xPos = m_screenWidth - width;
+    if (yPos + height > m_screenHeight)
+        yPos = m_screenHeight - height;
     for (int i = 0; i < m_layerCount; i++)
     {
         if(m_layers[i]->m_zorder == -1)
