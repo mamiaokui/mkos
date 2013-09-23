@@ -25,7 +25,9 @@ public:
     void initMouseCursorImage(unsigned char*);
     void init(Layer* mouseLayer);
     void moveLayerToMiddle();
-    void handleMouseInput(int data);
+    bool handleMouseInput(int data);
+    int getX() { return m_mouseX;}
+    int getY() { return m_mouseY;}
 private:
     MouseDataDecoder m_mouseDataDecoder;
     static KeyBoardMouseHandler* m_handler;

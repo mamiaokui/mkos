@@ -49,26 +49,21 @@ void StartupManager::loop()
 		} 
         else 
         {
-			int intData = m_interruptionBuffer->getInterruptionBufferData();
+			int data = m_interruptionBuffer->getInterruptionBufferData();
 			asmSti();
-            if (intData < 512)
+            if (data < 512)
             {
-                static char keytable[0x54] = {
-                    0,   0,   '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '^', 0,   0,
-                    'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '@', '[', 0,   0,   'A', 'S',
-                    'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', ':', 0,   0,   ']', 'Z', 'X', 'C', 'V',
-                    'B', 'N', 'M', ',', '.', '/', 0,   '*', 0,   ' ', 0,   0,   0,   0,   0,   0,
-                    0,   0,   0,   0,   0,   0,   0,   '7', '8', '9', '-', '4', '5', '6', '+', '1',
-                    '2', '3', '0', '.'
-                };
-
-                log(keytable[intData]);
+                logKeyboard(data);
             }
-            else if (intData < 1024)
+            else if (data < 1024)
             {
-                m_keyboardMouseHandler->handleMouseInput(intData);
+                bool oneMotion = m_keyboardMouseHandler->handleMouseInput(data);
+                if (oneMotion)
+                {
+                    m_layerWindow->setPosition(m_keyboardMouseHandler->getX()-160/2, m_keyboardMouseHandler->getY());
+                }
             }
-            else if (intData < 1536)
+            else if (data < 1536)
             {
                 TimerManager::getTimerManager()->tick();
             }
@@ -102,9 +97,11 @@ void StartupManager::countNumber()
 
 void StartupManager::log(int intData)
 {
+    return;
     char b[10];
     intToCharArray(b, intData);
     initScreen(m_layerBackground->getBuffer(), m_screenWidth, m_screenHeight);
+	drawRect(m_layerBackground->getBuffer(), m_screenWidth, COL008484,  0,         0,          20, 20);
     printString(m_layerBackground->getBuffer(), m_screenWidth, 8, 8, COLFFFFFF, b);
     m_layerManager->repaint(0, 0, m_screenWidth, m_screenHeight);
  
@@ -112,8 +109,22 @@ void StartupManager::log(int intData)
 
 void StartupManager::log(char charData)
 {
-    initScreen(m_layerBackground->getBuffer(), m_screenWidth, m_screenHeight);
+	drawRect(m_layerBackground->getBuffer(), m_screenWidth, COL008484,  0,         0,          150, 30);
     printFont(m_layerBackground->getBuffer(), m_screenWidth, 8, 8, COLFFFFFF, charData);
-    m_layerManager->repaint(0, 0, m_screenWidth, m_screenHeight);
+    m_layerManager->repaint(0, 0, 150, 30);
+}
+
+void StartupManager::logKeyboard(int data)
+{
+    static char keytable[0x54] = {
+        0,   0,   '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '^', 0,   0,
+        'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '@', '[', 0,   0,   'A', 'S',
+        'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', ':', 0,   0,   ']', 'Z', 'X', 'C', 'V',
+        'B', 'N', 'M', ',', '.', '/', 0,   '*', 0,   ' ', 0,   0,   0,   0,   0,   0,
+        0,   0,   0,   0,   0,   0,   0,   '7', '8', '9', '-', '4', '5', '6', '+', '1',
+        '2', '3', '0', '.'
+    };
+    if (keytable[data] != 0)
+        log(keytable[data]);
 
 }

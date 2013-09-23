@@ -142,7 +142,7 @@ void KeyBoardMouseHandler::moveLayerToMiddle()
     m_mouseY = m_layerMouse->getY();
 }
 
-void KeyBoardMouseHandler::handleMouseInput(int data)
+bool KeyBoardMouseHandler::handleMouseInput(int data)
 {
     bool output =  receiveMouseInterruption(data - 512);
     if (output)
@@ -175,6 +175,7 @@ void KeyBoardMouseHandler::handleMouseInput(int data)
 
         m_layerMouse->setPosition(m_mouseX, m_mouseY);
     }
+    return output;
 }
 
 #define PORT_KEYBOARD		0x0060

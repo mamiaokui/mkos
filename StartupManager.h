@@ -23,5 +23,6 @@ public:
     void countNumber();
     void log(int intData);
     void log(char charData);
+    void logKeyboard(int data);
 };
 #endif
