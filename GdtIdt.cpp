@@ -46,9 +46,9 @@ void initGdtIdt()
 	for (i = 0; i < 256; i++) {
 		setIDTI(idt + i, 0, 0, 0);
 	}
-    setIDTI(idt + 0x21, (int) asmInt21Handler-0x200000, 2 * 8, AR_INTGATE32);
-	setIDTI(idt + 0x27, (int) asmInt27Handler-0x200000, 2 * 8, AR_INTGATE32);
-	setIDTI(idt + 0x2c, (int) asmInt2cHandler-0x200000, 2 * 8, AR_INTGATE32);
+    setIDTI(idt + 0x21, (int) asmInt21Handler, 1 * 8, AR_INTGATE32);
+	setIDTI(idt + 0x27, (int) asmInt27Handler, 1 * 8, AR_INTGATE32);
+	setIDTI(idt + 0x2c, (int) asmInt2cHandler, 1 * 8, AR_INTGATE32);
 
 	asmLoadIDTR(0x7ff, (int)idt);
 	return;

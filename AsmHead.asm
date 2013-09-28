@@ -164,7 +164,7 @@ LABEL_SEG_CODE32:
     call RellocELF
 
         ;; 	jmp	BOOTPROGRAM_POS_RELLOC
-    jmp 16:0
+    jmp BOOTPROGRAM_POS_RELLOC
 
 ; 遍历每一个 Program Header，根据 Program Header 中的信息来确定把什么放进内存，放到什么位置，以及放多少。
 RellocELF:	

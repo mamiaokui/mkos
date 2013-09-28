@@ -50,7 +50,6 @@ extern "C" void MKOSMain(void)
 
 
     enableMouse();
-    doLog();
     startUpFinished = 1;
     while (true) {
 		asmCli();
