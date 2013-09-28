@@ -10,12 +10,13 @@ void * __gxx_personality_v0=0;
 void * _Unwind_Resume =0;
 
 extern InterruptionBuffer globalInterruptionBuffer;
+void emptyFunction()
+{
+    return;
+}
 
 extern "C" void MKOSMain(void)
 {
-    log_1 = 0x98765;
-    startUpFinished = 0;
-
     BootInfo* bootInfo = (BootInfo*)(BOOTINFO_ADDRESS);
 
     int screenWidth = bootInfo->m_screenWidth;
@@ -50,7 +51,6 @@ extern "C" void MKOSMain(void)
 
 
     enableMouse();
-    startUpFinished = 1;
     while (true) {
 		asmCli();
 		if (globalInterruptionBuffer.isInterruptionBufferEmpty()) {
@@ -63,7 +63,12 @@ extern "C" void MKOSMain(void)
             intToCharArray(b, intData);
             initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
             printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
-		}
+            emptyFunction();        
+            emptyFunction();        
+            emptyFunction();        
+            emptyFunction();        
+            emptyFunction();        
+        }
     }
 }
 
