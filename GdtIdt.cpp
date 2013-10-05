@@ -59,6 +59,8 @@ void initGdtIdtInterruption()
 	}
 	setGDTI(gdt + 1, 0xffffffff, 0x00000000, 0x409a);
     setGDTI(gdt + 2, 0x00100000, 0x00200000, 0x409a);
+    setGDTI(gdt + 3, 0x00100000, 0x00200000, 0x409a);
+    setGDTI(gdt + 4, 0x00100000, 0x00200000, 0x409a);
 	asmLoadGDTR(0xffff, (int)gdt);
 
 	for (i = 0; i < 256; i++) {
