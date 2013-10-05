@@ -8,7 +8,7 @@ RESB.o: RESB.asm
 	nasm RESB.asm -o RESB.o
 
 BootProgram.o: BootProgram.cpp
-	gcc -c -O0 -m32 -fno-stack-protector BootProgram.cpp -o BootProgram.o
+	gcc -c -O0 -m32 BootProgram.cpp -o BootProgram.o
 
 AsmPack.o: AsmPack.asm
 	nasm -f elf  AsmPack.asm -o AsmPack.o
@@ -17,19 +17,19 @@ FontData.o: FontData.asm
 	nasm  -f elf FontData.asm -o FontData.o
 
 GdtIdt.o: GdtIdt.h GdtIdt.cpp
-	gcc -c -O0 -m32 -fno-stack-protector GdtIdt.cpp -o GdtIdt.o
+	gcc -c -O0 -m32  GdtIdt.cpp -o GdtIdt.o
 
 PaintPack.o: PaintPack.h PaintPack.cpp
-	gcc -c -O0 -m32 -fno-stack-protector PaintPack.cpp -o PaintPack.o
+	gcc -c -O0 -m32  PaintPack.cpp -o PaintPack.o
 
 Utils.o: Utils.h Utils.cpp
-	gcc -c -O0 -m32 -fno-stack-protector Utils.cpp -o Utils.o
+	gcc -c -O0 -m32  Utils.cpp -o Utils.o
 
 Platform.o: Platform.h Platform.cpp
-	gcc -c -O0 -m32 -fno-stack-protector Platform.cpp -o Platform.o
+	gcc -c -O0 -m32  Platform.cpp -o Platform.o
 
 InterruptionBuffer.o: InterruptionBuffer.h InterruptionBuffer.cpp
-	gcc -c -O0 -m32 -fno-stack-protector InterruptionBuffer.cpp -o InterruptionBuffer.o
+	gcc -c -O0 -m32  InterruptionBuffer.cpp -o InterruptionBuffer.o
 
 BootProgramStart.o: BootProgramStart.asm
 	nasm -f elf BootProgramStart.asm -o BootProgramStart.o

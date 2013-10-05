@@ -6,8 +6,13 @@
 #include "InterruptionBuffer.h"
 
 //change from c to cpp, ld link error because can't find the implement.
-void * __gxx_personality_v0=0;
-void * _Unwind_Resume =0;
+extern "C" void foo()
+{
+    asmLog(0);
+}
+void (*__gxx_personality_v0)()= foo;
+void (*_Unwind_Resume)() = foo;
+void (*__stack_chk_fail)() = foo;
 
 extern InterruptionBuffer globalInterruptionBuffer;
 void emptyFunction()
@@ -63,11 +68,6 @@ extern "C" void MKOSMain(void)
             intToCharArray(b, intData);
             initScreen(bootInfo->m_vram, bootInfo->m_screenWidth, bootInfo->m_screenHeight);
             printString(bootInfo->m_vram, bootInfo->m_screenWidth, 8, 8, COLFFFFFF, b);
-            emptyFunction();        
-            emptyFunction();        
-            emptyFunction();        
-            emptyFunction();        
-            emptyFunction();        
         }
     }
 }
